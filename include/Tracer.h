@@ -2,6 +2,7 @@
 #define _TRACER_H_
 
 #include "Vector3.hpp"
+#include "Ray.hpp"
 
 class Tracer{
 	int _pixel_nx, _pixel_ny;
@@ -13,7 +14,7 @@ class Tracer{
 public:
 	Tracer();
 	void trace();
-	void computeRay(int x, int y, Vector3d& direction, Vector3d& origin);
+	Ray computeRay(int x, int y);
 };
 
 #endif

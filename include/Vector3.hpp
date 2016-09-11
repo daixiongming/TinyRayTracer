@@ -23,6 +23,17 @@ public:
 	{
 		return Vector3(_x + a._x, _y + a._y, _z + a._z);
 	}
+
+	Vector3<T> operator-(Vector3<T> a)
+	{
+		return Vector3(_x - a._x, _y - a._y, _z - a._z);
+	}
+
+	T operator*(Vector3<T> a)
+	{
+		return _x * a._x + _y * a._y + _z * a._z);
+	}
+
 public:
 	T _x, _y, _z;
 };

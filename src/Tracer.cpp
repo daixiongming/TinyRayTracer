@@ -12,18 +12,27 @@ _perspective(true)
 
 void Tracer::trace()
 {
-	
+	// for each pixel
+	for (int x = 0; x < _pixel_nx; x++){
+		for (int y = 0; y < _pixel_ny; y++){
+			// compute camera ray
+			Ray ray = computeRay(x, y);
+
+		}
+	}
 }
 
-void Tracer::computeRay(int x, int y, Vector3d& direction, Vector3d& origin)
+Ray Tracer::computeRay(int x, int y)
 {
 	double u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5) / _pixel_nx;
 	double v = _viewport_bottom + (_viewport_top - _viewport_bottom)*(y + 0.5) / _pixel_ny;
+	Ray ray;
 	if (_perspective){
-		direction = -_fd * _camera_w + u * _camera_u + v * _camera_v;
-		origin = _camera_pos;
+		ray.direction = -_fd * _camera_w + u * _camera_u + v * _camera_v;
+		ray.origin = _camera_pos;
 	}else{
-		direction = -_camera_w;
-		origin = _camera_pos + u * _camera_u + v * _camera_v;
+		ray.direction = -_camera_w;
+		ray.origin = _camera_pos + u * _camera_u + v * _camera_v;
 	}
+	return ray;
 }

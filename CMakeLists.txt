@@ -26,5 +26,5 @@ set(SOURCE_FILES src/main.cpp
 				src/Triangle.cpp
     )
 
-file(GLOB CURRENT_HEADERS  "include/*.h")
+file(GLOB CURRENT_HEADERS  "include/*.h" "include/*.hpp")
 add_executable(tray ${SOURCE_FILES} ${CURRENT_HEADERS})
