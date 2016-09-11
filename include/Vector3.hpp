@@ -1,15 +1,17 @@
 #ifndef _VECTOR3_H_
 #define _VECTOR3_H_
 
+#include <math.h>
+
 template <typename T = double>
 class Vector3{
 public:
-	Vector3::Vector3()
+	Vector3()
 		:_x(0.0), _y(0.0), _z(0.0)
 	{
 	}
 
-	Vector3::Vector3(T x, T y, T z)
+	Vector3(T x, T y, T z)
 		: _x(x), _y(y), _z(z)
 	{
 	}
@@ -31,9 +33,14 @@ public:
 
 	T operator*(Vector3<T> a)
 	{
-		return _x * a._x + _y * a._y + _z * a._z);
+		return _x * a._x + _y * a._y + _z * a._z;
 	}
 
+	Vector3<T> norm()
+	{
+		T length = sqrt(_x * _x + _y * _y + _z * _z);
+		return Vector3(_x / length, _y / length, _z / length);
+	}
 public:
 	T _x, _y, _z;
 };

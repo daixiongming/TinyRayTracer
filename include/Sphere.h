@@ -8,6 +8,9 @@ public:
 	Point3d _c;
 	double _r;
 public:
+	Sphere();
+	Sphere(Point3d c, double r);
+	virtual ~Sphere();
 	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
 };
 

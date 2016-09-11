@@ -6,7 +6,9 @@
 
 class Surface{
 public:
-	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
+	Surface();
+	virtual ~Surface();
+	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec) =0;
 	
 };
 
