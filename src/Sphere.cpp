@@ -28,10 +28,13 @@ bool Sphere::hit(const Ray& ray, double t0, double t1, HitRecord& rec)
 	double discriminant = b * b - (d * d)*((e - c) * (e - c) - _r * _r);
 	if (discriminant >= 0){
 		double t = (-b - sqrt(discriminant)) / (d * d);
-		rec._t = t;
-		rec._hit_point = ray.origin + t * ray.direction;
+		if (t >= t0 && t <= t1){
+			rec._t = t;
+			rec._hit_point = ray.origin + t * ray.direction;
+			return true;
+		}
 	}
-	return discriminant >= 0;
+	return false;
 }
 
 Vector3d Sphere::getNorm(Point3d p)

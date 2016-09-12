@@ -2,7 +2,7 @@
 #include "Surface.h"
 
 Surface::Surface()
-:_k_a(0.5), _k_d(0.5), _k_s(0.5), _p(16.0)
+:_k_a(0.2), _k_d(0.3), _k_s(0.5), _p(16.0)
 {
 
 }

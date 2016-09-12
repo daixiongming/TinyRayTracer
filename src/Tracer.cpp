@@ -2,6 +2,7 @@
 #include <fstream>
 #include "Tracer.h"
 #include "Sphere.h"
+#include "Plane.h"
 
 using std::cout;
 using std::endl;
@@ -21,11 +22,13 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
-	Light* light1 = new Light(1.0, Vector3d(1.0, 1.0, -1.0).norm());
+	Light* light1 = new Light(1.0, Vector3d(1.0, 2.0, -4.0).norm());
 	_lights.push_back(light1);
 
 	Surface* sphere1 = new Sphere(Point3d(0.0, 2.0, 1.0), 0.5);
+	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.0));
 	_models.push_back(sphere1);
+	_models.push_back(plane1);
 }
 
 // TODO: destroy world
@@ -43,18 +46,30 @@ void Tracer::trace()
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray ray = computeRay(x, y);
+			bool hit = false;
+			HitRecord min_hit;
+			min_hit._t = INFINITY;
+			int hit_obj = 0;
+
 			for (int i = 0; i < _models.size(); i++){
 				HitRecord hitr;
-				if (_models[i]->hit(ray, 0.25, 10.0, hitr)){
-					double intensity = _models[i]->shading(0.1, _lights, -ray.direction, hitr);
-					int val = (int)(intensity * 255);
-					if (val > 255)
-						val = 255;
-					img << val << ' ' << val << ' ' << val << endl;
+				if (_models[i]->hit(ray, 0.25, 100.0, hitr)){
+					hit = true;
+					if (hitr._t < min_hit._t){
+						min_hit = hitr;
+						hit_obj = i;
+					}
 				}
-				else{
-					img << 0 << ' ' << 0 << ' ' << 0 << endl;
-				}
+			}
+			if (hit){
+				double intensity = _models[hit_obj]->shading(0.1, _lights, -ray.direction, min_hit);
+				int val = (int)(intensity * 255);
+				if (val > 255)
+					val = 255;
+				img << val << ' ' << val << ' ' << val << endl;
+			}
+			else{
+				img << 0 << ' ' << 0 << ' ' << 0 << endl;
 			}
 		}
 		img << endl;

@@ -19,12 +19,13 @@ set(INCLUDE_DIRS include)
 include_directories(${INCLUDE_DIRS})
 
 set(SOURCE_FILES src/main.cpp
-				src/Polygon.cpp
-				src/Sphere.cpp
-				src/Surface.cpp
 				src/Tracer.cpp
+				src/Surface.cpp
+				src/Sphere.cpp
+				src/Plane.cpp
 				src/Triangle.cpp
-				src/Light.cpp
+				src/Polygon.cpp
+				src/Light.cpp				
     )
 
 file(GLOB CURRENT_HEADERS  "include/*.h" "include/*.hpp")
