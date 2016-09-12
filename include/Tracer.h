@@ -14,7 +14,9 @@ class Tracer{
 	bool _perspective;
 	double _fd;		// focal distance
 
-	std::vector<Surface*> _models;
+	std::vector<Light*> _lights;
+	std::vector<Surface*> _models;	// models
+	
 public:
 	Tracer();
 	void buildWorld();

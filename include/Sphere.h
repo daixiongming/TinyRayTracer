@@ -12,6 +12,7 @@ public:
 	Sphere(Point3d c, double r);
 	virtual ~Sphere();
 	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
+	virtual Vector3d getNorm(Point3d p);
 };
 
 #endif

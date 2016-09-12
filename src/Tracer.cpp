@@ -8,7 +8,7 @@ using std::endl;
 using std::ofstream;
 
 Tracer::Tracer()
-:_pixel_nx(400), _pixel_ny(400),
+:_pixel_nx(300), _pixel_ny(300),
 _viewport_left(-0.1), _viewport_right(0.1), _viewport_top(0.1), _viewport_bottom(-0.1),
 _camera_u(1.0, 0.0, 0.0), _camera_v(0.0, 0.0, 1.0), _camera_w(0.0, -1.0, 0.0),
 _camera_pos(0.0, 0.0, 1.0),
@@ -21,6 +21,9 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
+	Light* light1 = new Light(1.0, Vector3d(1.0, 1.0, -1.0).norm());
+	_lights.push_back(light1);
+
 	Surface* sphere1 = new Sphere(Point3d(0.0, 2.0, 1.0), 0.5);
 	_models.push_back(sphere1);
 }
@@ -36,14 +39,18 @@ void Tracer::trace()
 	img << _pixel_nx << ' ' << _pixel_ny << endl;
 	img << "255" << endl;
 	// for each pixel
-	for (int y = 0; y < _pixel_ny; y++){
+	for (int y = _pixel_ny - 1; y >= 0; y--){
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray ray = computeRay(x, y);
 			for (int i = 0; i < _models.size(); i++){
 				HitRecord hitr;
 				if (_models[i]->hit(ray, 0.25, 10.0, hitr)){
-					img << 255 << ' ' << 255 << ' ' << 255 << endl;
+					double intensity = _models[i]->shading(0.1, _lights, -ray.direction, hitr);
+					int val = (int)(intensity * 255);
+					if (val > 255)
+						val = 255;
+					img << val << ' ' << val << ' ' << val << endl;
 				}
 				else{
 					img << 0 << ' ' << 0 << ' ' << 0 << endl;

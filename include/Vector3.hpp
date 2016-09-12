@@ -16,27 +16,27 @@ public:
 	{
 	}
 
-	Vector3<T> operator-()
+	Vector3<T> operator-() const
 	{
 		return Vector3(-_x, -_y, -_z);
 	}
 
-	Vector3<T> operator+(Vector3<T> a)
+	Vector3<T> operator+(Vector3<T> a) const
 	{
 		return Vector3(_x + a._x, _y + a._y, _z + a._z);
 	}
 
-	Vector3<T> operator-(Vector3<T> a)
+	Vector3<T> operator-(Vector3<T> a) const
 	{
 		return Vector3(_x - a._x, _y - a._y, _z - a._z);
 	}
 
-	T operator*(Vector3<T> a)
+	T operator*(Vector3<T> a) const
 	{
 		return _x * a._x + _y * a._y + _z * a._z;
 	}
 
-	Vector3<T> norm()
+	Vector3<T> norm() const
 	{
 		T length = sqrt(_x * _x + _y * _y + _z * _z);
 		return Vector3(_x / length, _y / length, _z / length);

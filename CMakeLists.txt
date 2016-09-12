@@ -24,6 +24,7 @@ set(SOURCE_FILES src/main.cpp
 				src/Surface.cpp
 				src/Tracer.cpp
 				src/Triangle.cpp
+				src/Light.cpp
     )
 
 file(GLOB CURRENT_HEADERS  "include/*.h" "include/*.hpp")
