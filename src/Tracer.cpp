@@ -1,12 +1,14 @@
 #include <iostream>
+#include <fstream>
 #include "Tracer.h"
 #include "Sphere.h"
 
 using std::cout;
 using std::endl;
+using std::ofstream;
 
 Tracer::Tracer()
-:_pixel_nx(60), _pixel_ny(60),
+:_pixel_nx(400), _pixel_ny(400),
 _viewport_left(-0.1), _viewport_right(0.1), _viewport_top(0.1), _viewport_bottom(-0.1),
 _camera_u(1.0, 0.0, 0.0), _camera_v(0.0, 0.0, 1.0), _camera_w(0.0, -1.0, 0.0),
 _camera_pos(0.0, 0.0, 1.0),
@@ -29,22 +31,26 @@ void Tracer::buildWorld()
 
 void Tracer::trace()
 {
+	ofstream img("output.ppm");
+	img << "P3" << endl;
+	img << _pixel_nx << ' ' << _pixel_ny << endl;
+	img << "255" << endl;
 	// for each pixel
-	for (int x = 0; x < _pixel_nx; x++){
-		for (int y = 0; y < _pixel_ny; y++){
+	for (int y = 0; y < _pixel_ny; y++){
+		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray ray = computeRay(x, y);
 			for (int i = 0; i < _models.size(); i++){
 				HitRecord hitr;
 				if (_models[i]->hit(ray, 0.25, 10.0, hitr)){
-					cout << "¡ö";
+					img << 255 << ' ' << 255 << ' ' << 255 << endl;
 				}
 				else{
-					cout << "¡¡";
+					img << 0 << ' ' << 0 << ' ' << 0 << endl;
 				}
 			}
 		}
-		cout << endl;
+		img << endl;
 
 	}
 }
