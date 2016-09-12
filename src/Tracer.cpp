@@ -22,8 +22,10 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
-	Light* light1 = new Light(1.0, Vector3d(1.0, 2.0, -4.0).norm());
+	Light* light1 = new Light(Color(1.0, 1.0, 1.0), Vector3d(1.0, 2.0, -4.0).norm());
+	//Light* light2 = new Light(1.0, Vector3d(-1.0, -2.0, -4.0).norm());
 	_lights.push_back(light1);
+	//_lights.push_back(light2);
 
 	Surface* sphere1 = new Sphere(Point3d(0.0, 2.0, 1.0), 0.5);
 	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.0));
@@ -51,6 +53,7 @@ void Tracer::trace()
 			min_hit._t = INFINITY;
 			int hit_obj = 0;
 
+			// check all models
 			for (int i = 0; i < _models.size(); i++){
 				HitRecord hitr;
 				if (_models[i]->hit(ray, 0.25, 100.0, hitr)){
@@ -61,12 +64,21 @@ void Tracer::trace()
 					}
 				}
 			}
+
+			// shading
 			if (hit){
-				double intensity = _models[hit_obj]->shading(0.1, _lights, -ray.direction, min_hit);
-				int val = (int)(intensity * 255);
-				if (val > 255)
-					val = 255;
-				img << val << ' ' << val << ' ' << val << endl;
+				Color color = _models[hit_obj]->shading(Color(0.2, 0.2, 0.2), _lights, -ray.direction, min_hit);
+				int cx = (int)(color._x * 255);
+				int cy = (int)(color._y * 255);
+				int cz = (int)(color._z * 255);
+				if (cx > 255)
+					cx = 255;
+				if (cy > 255)
+					cy = 255;
+				if (cz > 255)
+					cz = 255;
+
+				img << cx << ' ' << cy << ' ' << cz << endl;
 			}
 			else{
 				img << 0 << ' ' << 0 << ' ' << 0 << endl;

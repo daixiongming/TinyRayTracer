@@ -5,8 +5,8 @@ Light::Light()
 
 }
 
-Light::Light(double intensity, Vector3d direction)
-:_intensity(intensity), _direction(direction)
+Light::Light(Color color, Vector3d direction)
+:_color(color), _direction(direction)
 {
 
 }

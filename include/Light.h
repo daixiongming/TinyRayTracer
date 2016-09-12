@@ -6,8 +6,8 @@
 class Light{
 public:
 	Light();
-	Light(double intensity, Vector3d direction);
-	double _intensity;
+	Light(Color color, Vector3d direction);
+	Color _color;
 	Vector3d _direction;
 };
 
