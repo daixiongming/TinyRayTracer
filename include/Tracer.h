@@ -2,6 +2,8 @@
 #define _TRACER_H_
 
 #include <vector>
+#include <map>
+#include <string>
 #include "Vector3.hpp"
 #include "Ray.hpp"
 #include "Surface.h"
@@ -19,6 +21,7 @@ class Tracer{
 	Color _background;
 	std::vector<Light*> _lights;
 	std::vector<Surface*> _models;	// models
+	std::map<std::string, Material*> _materials;
 	
 	int _mirror_recursion_depth;
 

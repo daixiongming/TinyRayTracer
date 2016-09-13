@@ -28,6 +28,7 @@ void Tracer::buildWorld()
 	string obj_name;
 	ifstream worldfs("world.txt");
 	double v1, v2, v3, v4;
+	string material_name;
 	do{
 		worldfs >> obj_name;
 		char trim;
@@ -76,9 +77,26 @@ void Tracer::buildWorld()
 			Light* light = new Light(c, d.norm());
 			_lights.push_back(light);
 		}
+		else if (obj_name == "material"){
+			worldfs >> material_name;
+			worldfs >> v1 >> v2 >> v3;
+			Color k_a(v1, v2, v3);	// ambient coefficient
+			worldfs >> v1 >> v2 >> v3;
+			Color k_d(v1, v2, v3);	// diffuse coefficient
+			worldfs >> v1 >> v2 >> v3;
+			Color k_s(v1, v2, v3);	// specular coefficient
+			worldfs >> v1 >> v2 >> v3;
+			Color k_m(v1, v2, v3); // mirror coefficient
+			worldfs >> v1;
+			double p = v1;		// phong exponent
+			Material* material = new Material(k_a, k_d, k_s, k_m, p);
+			_materials[material_name] = material;
+		}
 		else if (obj_name == "sphere"){
 			worldfs >> v1 >> v2 >> v3 >> v4;
 			Surface* sphere = new Sphere(Point3d(v1, v2, v3), v4);
+			worldfs >> material_name;
+			sphere->setMaterial(*_materials[material_name]);
 			_models.push_back(sphere);
 		}
 		else if (obj_name == "plane"){
@@ -87,6 +105,8 @@ void Tracer::buildWorld()
 			worldfs >> v1 >> v2 >> v3;
 			Point3d p(v1, v2, v3);
 			Plane* plane = new Plane(n.norm(), p);
+			worldfs >> material_name;
+			plane->setMaterial(*_materials[material_name]);
 			_models.push_back(plane);
 		}
 	} while (!worldfs.eof());
