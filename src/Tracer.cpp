@@ -23,14 +23,16 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
-	Light* light1 = new Light(Color(1.0, 1.0, 0.0), Vector3d(5.0, 1.0, -2.0).norm());
-	Light* light2 = new Light(Color(0.4, 0.1, 0.5), Vector3d(-1.0, -2.0, -5.0).norm());
+	Light* light1 = new Light(Color(1.0, 1.0, 1.0), Vector3d(5.0, 1.0, -2.0).norm());
+	//Light* light2 = new Light(Color(0.4, 0.1, 0.5), Vector3d(-1.0, -2.0, -5.0).norm());
 	_lights.push_back(light1);
-	_lights.push_back(light2);
+	//_lights.push_back(light2);
 
-	Surface* sphere1 = new Sphere(Point3d(0.0, 2.0, 1.0), 0.5);
-	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.3));
+	Surface* sphere1 = new Sphere(Point3d(-0.6, 2.0, 1.0), 0.3);
+	Surface* sphere2 = new Sphere(Point3d(0.2, 1.5, 1.0), 0.3);
+	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.7));
 	_models.push_back(sphere1);
+	_models.push_back(sphere2);
 	_models.push_back(plane1);
 }
 
@@ -56,6 +58,51 @@ HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
 	return hitr;
 }
 
+Color Tracer::rayColor(Ray ray, int mirror_depth)
+{
+	// hit test
+	HitRecord cam_hit = hitSurface(ray, 0.25, INFINITY);
+
+	Color color;
+	// shading
+	if (cam_hit._surface >= 0){
+
+		vector<Light*> valid_lights = _lights;
+
+		// check for shadow
+		Point3d hit_point = cam_hit._hit_point;
+		for (int i = 0; i < _lights.size(); i++){
+			Ray light_ray;
+			light_ray.origin = hit_point;
+			light_ray.direction = -_lights[i]->_direction;
+			HitRecord light_hit = hitSurface(light_ray, 0.001, INFINITY);
+			if (light_hit._surface >= 0)
+				valid_lights[i] = NULL;
+		}
+
+		// color shading
+		color = _models[cam_hit._surface]->shading(Color(0.3, 0.3, 0.3), valid_lights, -ray.direction, cam_hit);
+		// get surface reflecting(mirror) color
+		Color k_m = _models[cam_hit._surface]->getMirrorColor();
+		if (!k_m.isZero() && mirror_depth > 0){
+			// mirror ray
+			Vector3d norm = _models[cam_hit._surface]->getNorm(cam_hit._hit_point);
+			Ray mray;
+			mray.origin = cam_hit._hit_point;
+			mray.direction = ray.direction - 2 * (ray.direction * norm) * norm;
+
+			color += k_m.times(rayColor(mray, mirror_depth - 1));
+
+		}
+			
+	}
+	else{
+		// clear color
+		color = Color(0.0, 0.0, 0.0);
+	}
+	return color;
+}
+
 void Tracer::trace()
 {
 	ofstream img("output.ppm");
@@ -67,42 +114,19 @@ void Tracer::trace()
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray cam_ray = computeRay(x, y);
-			// hit test
-			HitRecord cam_hit = hitSurface(cam_ray, 0.25, INFINITY);
+			Color color = rayColor(cam_ray, 2);
+			int cx = (int)(color._x * 255);
+			int cy = (int)(color._y * 255);
+			int cz = (int)(color._z * 255);
+			if (cx > 255)
+				cx = 255;
+			if (cy > 255)
+				cy = 255;
+			if (cz > 255)
+				cz = 255;
 
-			// shading
-			if (cam_hit._surface >= 0){
-				
-				vector<Light*> valid_lights = _lights;
-				
-				// check for shadow
-				Point3d hit_point = cam_hit._hit_point;
-				for (int i = 0; i < _lights.size(); i++){
-					Ray light_ray;
-					light_ray.origin = hit_point;
-					light_ray.direction = -_lights[i]->_direction;
-					HitRecord light_hit = hitSurface(light_ray, 0.001, INFINITY);
-					if (light_hit._surface >= 0)
-						valid_lights[i] = NULL;
-				}
-				
-				// color shading
-				Color color = _models[cam_hit._surface]->shading(Color(0.3, 0.3, 0.3), valid_lights, -cam_ray.direction, cam_hit);
-				int cx = (int)(color._x * 255);
-				int cy = (int)(color._y * 255);
-				int cz = (int)(color._z * 255);
-				if (cx > 255)
-					cx = 255;
-				if (cy > 255)
-					cy = 255;
-				if (cz > 255)
-					cz = 255;
+			img << cx << ' ' << cy << ' ' << cz << endl;
 
-				img << cx << ' ' << cy << ' ' << cz << endl;
-			}
-			else{
-				img << 0 << ' ' << 0 << ' ' << 0 << endl;
-			}
 		}
 		img << endl;
 

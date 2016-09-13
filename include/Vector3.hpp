@@ -16,6 +16,11 @@ public:
 	{
 	}
 
+	bool isZero()
+	{
+		return _x == 0.0 && _y == 0.0 && _z == 0.0;
+	}
+
 	Vector3<T> operator-() const
 	{
 		return Vector3(-_x, -_y, -_z);

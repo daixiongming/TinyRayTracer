@@ -22,6 +22,7 @@ public:
 	Tracer();
 	void buildWorld();
 	void trace();
+	Color rayColor(Ray ray, int mirror_depth = 0);
 	Ray computeRay(int x, int y);
 	HitRecord hitSurface(Ray ray, double t0, double t1);
 };
