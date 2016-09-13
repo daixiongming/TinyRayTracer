@@ -1,0 +1,13 @@
+# the world to be rendered
+# '#' is the comment
+# all letter should be lower case
+
+#light	color(RGB)	direction
+light	1.0 1.0 1.0	5.0 1.0 -2.0
+
+#shere	center		radius
+sphere	-0.6 2.0 1.0	0.3
+sphere	0.2 1.5 1.0	0.3
+
+#plane	normal		point on plane
+plane	0.0 0.0 1.0	0.0 0.0 0.7

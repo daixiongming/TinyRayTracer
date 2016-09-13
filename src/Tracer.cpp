@@ -1,13 +1,11 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "Tracer.h"
 #include "Sphere.h"
 #include "Plane.h"
 
-using std::cout;
-using std::endl;
-using std::ofstream;
-using std::vector;
+using namespace std;
 
 Tracer::Tracer()
 :_pixel_nx(300), _pixel_ny(300),
@@ -23,17 +21,40 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
-	Light* light1 = new Light(Color(1.0, 1.0, 1.0), Vector3d(5.0, 1.0, -2.0).norm());
-	//Light* light2 = new Light(Color(0.4, 0.1, 0.5), Vector3d(-1.0, -2.0, -5.0).norm());
-	_lights.push_back(light1);
-	//_lights.push_back(light2);
-
-	Surface* sphere1 = new Sphere(Point3d(-0.6, 2.0, 1.0), 0.3);
-	Surface* sphere2 = new Sphere(Point3d(0.2, 1.5, 1.0), 0.3);
-	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.7));
-	_models.push_back(sphere1);
-	_models.push_back(sphere2);
-	_models.push_back(plane1);
+	// reading world file
+	string obj_name;
+	ifstream worldfs("world.txt");
+	double v1, v2, v3, v4;
+	do{
+		worldfs >> obj_name;
+		char trim;
+		if (obj_name[0] == '#'){
+			do{
+				worldfs.get(trim);
+			} while (trim != '\n' && !worldfs.eof());
+		}
+		else if(obj_name == "light"){
+			worldfs >> v1 >> v2 >> v3;
+			Color c(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d d(v1, v2, v3);
+			Light* light = new Light(c, d.norm());
+			_lights.push_back(light);
+		}
+		else if (obj_name == "sphere"){
+			worldfs >> v1 >> v2 >> v3 >> v4;
+			Surface* sphere = new Sphere(Point3d(v1, v2, v3), v4);
+			_models.push_back(sphere);
+		}
+		else if (obj_name == "plane"){
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d n(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Point3d p(v1, v2, v3);
+			Plane* plane = new Plane(n.norm(), p);
+			_models.push_back(plane);
+		}
+	} while (!worldfs.eof());
 }
 
 // TODO: destroy world
