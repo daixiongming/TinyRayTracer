@@ -83,7 +83,7 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 		// color shading
 		color = _models[cam_hit._surface]->shading(Color(0.3, 0.3, 0.3), valid_lights, -ray.direction, cam_hit);
 		// get surface reflecting(mirror) color
-		Color k_m = _models[cam_hit._surface]->getMirrorColor();
+		Color k_m = _models[cam_hit._surface]->getMaterial().getMirror();
 		if (!k_m.isZero() && mirror_depth > 0){
 			// mirror ray
 			Vector3d norm = _models[cam_hit._surface]->getNorm(cam_hit._hit_point);

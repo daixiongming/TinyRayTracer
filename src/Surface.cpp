@@ -2,7 +2,12 @@
 #include "Surface.h"
 
 Surface::Surface()
-:_k_a(0.2, 0.2, 0.2), _k_d(0.4, 0.4, 0.4), _k_s(0.5, 0.5, 0.5), _k_m(0.1, 0.1, 0.1), _p(32.0)
+{
+
+}
+
+Surface::Surface(Material material)
+:_material(material)
 {
 
 }
@@ -12,17 +17,14 @@ Surface::~Surface()
 
 }
 
-Color Surface::getMirrorColor()
+void Surface::setMaterial(Material material)
 {
-	return _k_m;
+	_material = material;
 }
 
-void Surface::setMaterial(Color ambient, Color diffuse, Color specular, Color mirror, double phong_exp)
+Material Surface::getMaterial()
 {
-	_k_a = ambient;
-	_k_d = diffuse;
-	_k_s = specular;
-	_p = phong_exp;
+	return _material;
 }
 
 Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
@@ -31,6 +33,7 @@ Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
 	Vector3d norm = this->getNorm(rec._hit_point);
 
 	Color L = Color(0.0, 0.0, 0.0);
+	
 	int light_num = (int)lights.size();
 	for (int i = 0; i < light_num; i++){
 		// skip the shadowed light
@@ -40,14 +43,14 @@ Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
 		Color Ii = lights[i]->_color;
 		Vector3d ldi = -lights[i]->_direction;
 		// diffuse reflection
-		L += _k_d.times(Ii) * std::max(0.0, norm * ldi);
+		L += _material._k_d.times(Ii) * std::max(0.0, norm * ldi);
 
 		// specular reflection
 		Vector3d h = (ldi + camera_direction).norm();
-		L += _k_s.times(Ii) * pow(std::max(0.0, norm * h), _p);
+		L += _material._k_s.times(Ii) * pow(std::max(0.0, norm * h), _material._p);
 	}
 	// ambient light
-	L += _k_a.times(ambient_light);
+	L += _material._k_a.times(ambient_light);
 
 	return L;
 }

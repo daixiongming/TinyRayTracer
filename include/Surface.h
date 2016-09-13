@@ -6,13 +6,16 @@
 #include "HitRecord.hpp"
 #include "Vector3.hpp"
 #include "Light.h"
+#include "Material.h"
 
 class Surface{
 public:
 	Surface();
+	Surface(Material material);
 	virtual ~Surface();
 
-	void setMaterial(Color ambient, Color diffuse, Color specular, Color mirror, double phong_exp);
+	void setMaterial(Material material);
+	Material getMaterial();
 
 	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec) =0;
 	virtual Vector3d getNorm(Point3d p) =0;
@@ -21,14 +24,10 @@ public:
 	virtual Color shading(Color ambient_light, std::vector<Light*> lights,
 			Vector3d camera_direction, const HitRecord& rec);
 
-	Color getMirrorColor();
+	
 protected:
 
-	Color _k_a;	// ambient coefficient
-	Color _k_d;	// diffuse coefficient
-	Color _k_s;	// specular coefficient
-	Color _k_m; // mirror coefficient
-	double _p;		// phong exponent
+	Material _material;
 
 };
 
