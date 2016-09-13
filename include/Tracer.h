@@ -15,9 +15,13 @@ class Tracer{
 	bool _perspective;
 	double _fd;		// focal distance
 
+	Color _ambient_light;
+	Color _background;
 	std::vector<Light*> _lights;
 	std::vector<Surface*> _models;	// models
 	
+	int _mirror_recursion_depth;
+
 public:
 	Tracer();
 	void buildWorld();

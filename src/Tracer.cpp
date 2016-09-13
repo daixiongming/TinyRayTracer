@@ -13,7 +13,10 @@ _viewport_left(-0.1), _viewport_right(0.1), _viewport_top(0.1), _viewport_bottom
 _camera_u(1.0, 0.0, 0.0), _camera_v(0.0, 0.0, 1.0), _camera_w(0.0, -1.0, 0.0),
 _camera_pos(0.0, 0.0, 1.0),
 _perspective(true),
-_fd(0.2)
+_fd(0.2),
+_ambient_light(0.3, 0.3, 0.3),
+_background(0.0, 0.0, 0.0),
+_mirror_recursion_depth(1)
 {
 
 }
@@ -53,6 +56,17 @@ void Tracer::buildWorld()
 		}
 		else if (obj_name == "resolution"){
 			worldfs >> _pixel_nx >> _pixel_ny;
+		}
+		else if (obj_name == "background"){
+			worldfs >> v1 >> v2 >> v3;
+			_background = Color(v1, v2, v3);
+		}
+		else if (obj_name == "ambient_light"){
+			worldfs >> v1 >> v2 >> v3;
+			_ambient_light = Color(v1, v2, v3);
+		}
+		else if (obj_name == "mirror_recursion_depth"){
+			worldfs >> _mirror_recursion_depth;
 		}
 		else if(obj_name == "light"){
 			worldfs >> v1 >> v2 >> v3;
@@ -123,7 +137,7 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 		}
 
 		// color shading
-		color = _models[cam_hit._surface]->shading(Color(0.3, 0.3, 0.3), valid_lights, -ray.direction, cam_hit);
+		color = _models[cam_hit._surface]->shading(_ambient_light, valid_lights, -ray.direction, cam_hit);
 		// get surface reflecting(mirror) color
 		Color k_m = _models[cam_hit._surface]->getMaterial().getMirror();
 		if (!k_m.isZero() && mirror_depth > 0){
@@ -139,8 +153,8 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 			
 	}
 	else{
-		// clear color
-		color = Color(0.0, 0.0, 0.0);
+		// clear color (background)
+		color = _background;
 	}
 	return color;
 }
@@ -156,7 +170,7 @@ void Tracer::trace()
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray cam_ray = computeRay(x, y);
-			Color color = rayColor(cam_ray, 2);
+			Color color = rayColor(cam_ray, _mirror_recursion_depth);
 			int cx = (int)(color._x * 255);
 			int cy = (int)(color._y * 255);
 			int cz = (int)(color._z * 255);
