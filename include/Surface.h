@@ -12,7 +12,7 @@ public:
 	Surface();
 	virtual ~Surface();
 
-	void setMaterial(double ambient, double diffuse, double specular, double phong_exp);
+	void setMaterial(Color ambient, Color diffuse, Color specular, double phong_exp);
 
 	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec) =0;
 	virtual Vector3d getNorm(Point3d p) =0;
@@ -23,9 +23,9 @@ public:
 
 protected:
 
-	double _k_a;	// ambient coefficient
-	double _k_d;	// diffuse coefficient
-	double _k_s;	// specular coefficient
+	Color _k_a;	// ambient coefficient
+	Color _k_d;	// diffuse coefficient
+	Color _k_s;	// specular coefficient
 	double _p;		// phong exponent
 
 };

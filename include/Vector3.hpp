@@ -49,6 +49,11 @@ public:
 		T length = sqrt(_x * _x + _y * _y + _z * _z);
 		return Vector3(_x / length, _y / length, _z / length);
 	}
+
+	Vector3<T> times(const Vector3<T>& a) const
+	{
+		return Vector3<T>(_x * a._x, _y * a._y, _z * a._z);
+	}
 public:
 	T _x, _y, _z;
 };
