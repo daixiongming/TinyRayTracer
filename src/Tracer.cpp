@@ -7,6 +7,7 @@
 using std::cout;
 using std::endl;
 using std::ofstream;
+using std::vector;
 
 Tracer::Tracer()
 :_pixel_nx(300), _pixel_ny(300),
@@ -22,13 +23,13 @@ _fd(0.2)
 
 void Tracer::buildWorld()
 {
-	Light* light1 = new Light(Color(1.0, 1.0, 1.0), Vector3d(1.0, 2.0, -4.0).norm());
-	//Light* light2 = new Light(1.0, Vector3d(-1.0, -2.0, -4.0).norm());
+	Light* light1 = new Light(Color(1.0, 1.0, 0.0), Vector3d(5.0, 1.0, -2.0).norm());
+	Light* light2 = new Light(Color(0.4, 0.1, 0.5), Vector3d(-1.0, -2.0, -5.0).norm());
 	_lights.push_back(light1);
-	//_lights.push_back(light2);
+	_lights.push_back(light2);
 
 	Surface* sphere1 = new Sphere(Point3d(0.0, 2.0, 1.0), 0.5);
-	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.0));
+	Plane* plane1 = new Plane(Vector3d(0.0, 0.0, 1.0).norm(), Point3d(0.0, 0.0, 0.3));
 	_models.push_back(sphere1);
 	_models.push_back(plane1);
 }
@@ -36,6 +37,24 @@ void Tracer::buildWorld()
 // TODO: destroy world
 //
 
+
+HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
+{
+	HitRecord hitr;
+	hitr._surface = -1;
+	hitr._t = INFINITY;
+	// check all models
+	for (int i = 0; i < _models.size(); i++){
+		HitRecord h;
+		if (_models[i]->hit(ray, t0, t1, h)){
+			if (h._t < hitr._t){
+				hitr = h;
+				hitr._surface = i;
+			}
+		}
+	}
+	return hitr;
+}
 
 void Tracer::trace()
 {
@@ -47,27 +66,28 @@ void Tracer::trace()
 	for (int y = _pixel_ny - 1; y >= 0; y--){
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
-			Ray ray = computeRay(x, y);
-			bool hit = false;
-			HitRecord min_hit;
-			min_hit._t = INFINITY;
-			int hit_obj = 0;
-
-			// check all models
-			for (int i = 0; i < _models.size(); i++){
-				HitRecord hitr;
-				if (_models[i]->hit(ray, 0.25, 100.0, hitr)){
-					hit = true;
-					if (hitr._t < min_hit._t){
-						min_hit = hitr;
-						hit_obj = i;
-					}
-				}
-			}
+			Ray cam_ray = computeRay(x, y);
+			// hit test
+			HitRecord cam_hit = hitSurface(cam_ray, 0.25, INFINITY);
 
 			// shading
-			if (hit){
-				Color color = _models[hit_obj]->shading(Color(0.2, 0.2, 0.2), _lights, -ray.direction, min_hit);
+			if (cam_hit._surface >= 0){
+				
+				vector<Light*> valid_lights = _lights;
+				
+				// check for shadow
+				Point3d hit_point = cam_hit._hit_point;
+				for (int i = 0; i < _lights.size(); i++){
+					Ray light_ray;
+					light_ray.origin = hit_point;
+					light_ray.direction = -_lights[i]->_direction;
+					HitRecord light_hit = hitSurface(light_ray, 0.001, INFINITY);
+					if (light_hit._surface >= 0)
+						valid_lights[i] = NULL;
+				}
+				
+				// color shading
+				Color color = _models[cam_hit._surface]->shading(Color(0.3, 0.3, 0.3), valid_lights, -cam_ray.direction, cam_hit);
 				int cx = (int)(color._x * 255);
 				int cy = (int)(color._y * 255);
 				int cz = (int)(color._z * 255);
@@ -89,6 +109,7 @@ void Tracer::trace()
 	}
 }
 
+// TODO: change the function name
 Ray Tracer::computeRay(int x, int y)
 {
 	double u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5) / _pixel_nx;

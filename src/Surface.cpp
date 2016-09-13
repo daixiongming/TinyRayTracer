@@ -2,7 +2,7 @@
 #include "Surface.h"
 
 Surface::Surface()
-:_k_a(0.2, 0.2, 0.2), _k_d(0.3, 0.3, 0.3), _k_s(0.5, 0.5, 0.5), _p(16.0)
+:_k_a(0.2, 0.2, 0.2), _k_d(0.4, 0.4, 0.4), _k_s(0.5, 0.5, 0.5), _p(32.0)
 {
 
 }
@@ -20,7 +20,7 @@ void Surface::setMaterial(Color ambient, Color diffuse, Color specular, double p
 	_p = phong_exp;
 }
 
-Color Surface::shading(Color ambient_color, std::vector<Light*> lights,
+Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
 						Vector3d camera_direction, const HitRecord& rec)
 {
 	Vector3d norm = this->getNorm(rec._hit_point);
@@ -28,6 +28,10 @@ Color Surface::shading(Color ambient_color, std::vector<Light*> lights,
 	Color L = Color(0.0, 0.0, 0.0);
 	int light_num = (int)lights.size();
 	for (int i = 0; i < light_num; i++){
+		// skip the shadowed light
+		if (!lights[i])
+			continue;
+
 		Color Ii = lights[i]->_color;
 		Vector3d ldi = -lights[i]->_direction;
 		// diffuse reflection
@@ -38,7 +42,7 @@ Color Surface::shading(Color ambient_color, std::vector<Light*> lights,
 		L += _k_s.times(Ii) * pow(std::max(0.0, norm * h), _p);
 	}
 	// ambient light
-	L += _k_a.times(ambient_color);
+	L += _k_a.times(ambient_light);
 
 	return L;
 }

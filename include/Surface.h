@@ -18,7 +18,7 @@ public:
 	virtual Vector3d getNorm(Point3d p) =0;
 
 	// NOTE: lights_direction and norm must be unit vector
-	virtual Color shading(Color ambient_color, std::vector<Light*> lights,
+	virtual Color shading(Color ambient_light, std::vector<Light*> lights,
 			Vector3d camera_direction, const HitRecord& rec);
 
 protected:

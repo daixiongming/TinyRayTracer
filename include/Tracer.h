@@ -5,6 +5,7 @@
 #include "Vector3.hpp"
 #include "Ray.hpp"
 #include "Surface.h"
+#include "HitRecord.hpp"
 
 class Tracer{
 	int _pixel_nx, _pixel_ny;
@@ -22,6 +23,7 @@ public:
 	void buildWorld();
 	void trace();
 	Ray computeRay(int x, int y);
+	HitRecord hitSurface(Ray ray, double t0, double t1);
 };
 
 #endif
