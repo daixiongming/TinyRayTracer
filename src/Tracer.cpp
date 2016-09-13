@@ -33,6 +33,27 @@ void Tracer::buildWorld()
 				worldfs.get(trim);
 			} while (trim != '\n' && !worldfs.eof());
 		}
+		else if (obj_name == "camera"){
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d u(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d v(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d w(v1, v2, v3);
+			_camera_u = u;
+			_camera_v = v;
+			_camera_w = w;
+		}
+		else if (obj_name == "viewport"){
+			worldfs >> v1 >> v2 >> v3 >> v4;
+			_viewport_left = v1;
+			_viewport_right = v2;
+			_viewport_top = v3;
+			_viewport_bottom = v4;
+		}
+		else if (obj_name == "resolution"){
+			worldfs >> _pixel_nx >> _pixel_ny;
+		}
 		else if(obj_name == "light"){
 			worldfs >> v1 >> v2 >> v3;
 			Color c(v1, v2, v3);

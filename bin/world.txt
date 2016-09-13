@@ -2,6 +2,15 @@
 # '#' is the comment
 # all letter should be lower case
 
+#camera	axis of u	v		w	(w is backward camera)
+camera 	1.0 0.0 0.0	0.0 0.0 1.0	0.0 -1.0 0.0
+
+#viewport left	right	top	bottom	(based on camera u v coordination)
+viewport -0.15	0.15	0.1	-0.1
+
+#resolution width	height	(w/h should consistent with viewport)
+resolution	450	300
+
 #light	color(RGB)	direction
 light	1.0 1.0 1.0	5.0 1.0 -2.0
 
