@@ -4,6 +4,7 @@
 #include "Tracer.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Triangle.h"
 
 using namespace std;
 
@@ -104,6 +105,19 @@ void Tracer::buildWorld()
 			worldfs >> material_name;
 			sphere->setMaterial(*_materials[material_name]);
 			_models.push_back(sphere);
+		}
+		else if (obj_name == "triangle"){
+			worldfs >> v1 >> v2 >> v3;
+			Point3d a(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Point3d b(v1, v2, v3);
+			worldfs >> v1 >> v2 >> v3;
+			Point3d c(v1, v2, v3);
+
+			Triangle* triangle = new Triangle(a, b, c);
+			worldfs >> material_name;
+			triangle->setMaterial(*_materials[material_name]);
+			_models.push_back(triangle);
 		}
 		else if (obj_name == "plane"){
 			worldfs >> v1 >> v2 >> v3;

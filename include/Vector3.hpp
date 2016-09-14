@@ -59,6 +59,12 @@ public:
 	{
 		return Vector3<T>(_x * a._x, _y * a._y, _z * a._z);
 	}
+
+	Vector3<T> cross(const Vector3<T>& a) const
+	{
+		return Vector3<T>(_y*a._z - _z*a._y, _z*a._x - _x*a._z, _x*a._y - _y*a._x);
+	}
+
 public:
 	T _x, _y, _z;
 };

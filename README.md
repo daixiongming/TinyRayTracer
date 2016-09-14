@@ -28,4 +28,4 @@ The tray program will read the file 'world.txt' and generate a **ppm** image fil
 
 # Result #
 
-![demo.jpg](bin/demo.jpg)
+![sample.jpg](bin/sample.jpg)
