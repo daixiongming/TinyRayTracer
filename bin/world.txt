@@ -2,14 +2,17 @@
 # '#' is the comment
 # all letter should be lower case
 
-#camera	axis of u	v		w	(w is backward camera)
-camera 	1.0 0.0 0.0	0.0 0.0 1.0	0.0 -1.0 0.0
+#camera	axis of u	v		w (w is backward camera)	pos
+camera 	1.0 0.0 0.0	0.0 1.0 1.0	0.0 -1.0 1.0			0.5 -4.0 5.0
 
 #viewport left	right	top	bottom	(based on camera u v coordination)
 viewport -0.15	0.15	0.1	-0.1
 
+#focal_distance	double
+focal_distance	0.5
+
 #resolution width	height	(w/h should consistent with viewport)
-resolution	450	300
+resolution	900	600
 
 #background	color(RGB)
 background	0.0 0.0 0.0
@@ -18,17 +21,30 @@ background	0.0 0.0 0.0
 ambient_light	0.3 0.3 0.3
 
 #mirror_recursion_depth	int
-mirror_recursion_depth	2
+mirror_recursion_depth	5
 
 #light	color(RGB)	direction
-light	1.0 1.0 1.0	5.0 1.0 -2.0
+light	0.8 0.8 0.8 5.0 1.0 -2.0
+#light	0.2 0.2 0.2 3.0 -1.0 -1.0
+light	0.2 0.2 0.2 -1.0 1.0 -2.0
 
-#material name	ambient		diffuse		specular	mirror		phong_exponent
-material  m1	0.2 0.2 0.2	0.4 0.4 0.4	0.5 0.5 0.5	0.1 0.1 0.1	32.0
+#material name		ambient		diffuse		specular	mirror		phong_exponent
+material  diffuse	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.0 0.0 0.0	32.0
+material  mirror1	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.1 0.1 0.1	32.0
+material  mirror2	0.1 0.1 0.1	0.4 0.4 0.4	0.5 0.5 0.5	0.6 0.6 0.6	32.0
+material  white		1.0 1.0 1.0	1.0 1.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
+material  red		1.0 0.0 0.0	1.0 0.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
+material  green		0.0 1.0 0.0	0.0 1.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
+material  blue		0.0 0.0 1.0	0.0 0.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 
 #shere	center		radius	material_name
-sphere	-0.6 2.0 1.0	0.3	m1
-sphere	0.2 1.5 1.0	0.3	m1
+sphere	0.0 0.0 0.5	0.5	white
+sphere	1.0 0.5 0.3	0.3	red
+sphere	1.5 0.0 0.3	0.3	green
+sphere	-1.0 0.5 0.3	0.3	blue
 
 #plane	normal		point on plane	material_name
-plane	0.0 0.0 1.0	0.0 0.0 0.7	m1
+plane	0.0 0.0 1.0	0.0 0.0 0.0	mirror1
+plane	-0.5 -1.0 0.0	0.0 1.6 0.0	mirror2
+#plane	-1.0 -1.0 0.0	3.0 0.0 0.0	mirror
+

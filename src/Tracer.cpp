@@ -29,8 +29,7 @@ void Tracer::buildWorld()
 	ifstream worldfs("world.txt");
 	double v1, v2, v3, v4;
 	string material_name;
-	do{
-		worldfs >> obj_name;
+	while (worldfs >> obj_name && !worldfs.eof()){
 		char trim;
 		if (obj_name[0] == '#'){
 			do{
@@ -44,9 +43,12 @@ void Tracer::buildWorld()
 			Vector3d v(v1, v2, v3);
 			worldfs >> v1 >> v2 >> v3;
 			Vector3d w(v1, v2, v3);
-			_camera_u = u;
-			_camera_v = v;
-			_camera_w = w;
+			worldfs >> v1 >> v2 >> v3;
+			Vector3d pos(v1, v2, v3);
+			_camera_u = u.norm();
+			_camera_v = v.norm();
+			_camera_w = w.norm();
+			_camera_pos = pos;
 		}
 		else if (obj_name == "viewport"){
 			worldfs >> v1 >> v2 >> v3 >> v4;
@@ -54,6 +56,10 @@ void Tracer::buildWorld()
 			_viewport_right = v2;
 			_viewport_top = v3;
 			_viewport_bottom = v4;
+		}
+		else if (obj_name == "focal_distance"){
+			worldfs >> v1;
+			_fd = v1;
 		}
 		else if (obj_name == "resolution"){
 			worldfs >> _pixel_nx >> _pixel_ny;
@@ -109,7 +115,7 @@ void Tracer::buildWorld()
 			plane->setMaterial(*_materials[material_name]);
 			_models.push_back(plane);
 		}
-	} while (!worldfs.eof());
+	};
 }
 
 // TODO: destroy world
@@ -137,7 +143,7 @@ HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
 Color Tracer::rayColor(Ray ray, int mirror_depth)
 {
 	// hit test
-	HitRecord cam_hit = hitSurface(ray, 0.25, INFINITY);
+	HitRecord cam_hit = hitSurface(ray, 0.0001, INFINITY);
 
 	Color color;
 	// shading
@@ -151,7 +157,7 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 			Ray light_ray;
 			light_ray.origin = hit_point;
 			light_ray.direction = -_lights[i]->_direction;
-			HitRecord light_hit = hitSurface(light_ray, 0.001, INFINITY);
+			HitRecord light_hit = hitSurface(light_ray, 0.00001, INFINITY);
 			if (light_hit._surface >= 0)
 				valid_lights[i] = NULL;
 		}
