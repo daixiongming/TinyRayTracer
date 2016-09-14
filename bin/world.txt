@@ -15,7 +15,7 @@ focal_distance	0.5
 resolution	900	600
 
 #background	color(RGB)
-background	0.0 0.0 0.0
+background	0.2 0.2 0.2
 
 #ambientlight	color(RGB)
 ambient_light	0.3 0.3 0.3
@@ -32,6 +32,7 @@ light	0.2 0.2 0.2 -1.0 1.0 -2.0
 material  diffuse	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.0 0.0 0.0	32.0
 material  mirror1	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.1 0.1 0.1	32.0
 material  mirror2	0.1 0.1 0.1	0.4 0.4 0.4	0.5 0.5 0.5	0.6 0.6 0.6	32.0
+material  complete_mirror	0.1 0.1 0.1		0.2 0.2 0.2	0.2 0.2 0.2	0.8 0.8 0.8 32.0
 material  white		1.0 1.0 1.0	1.0 1.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  red		1.0 0.0 0.0	1.0 0.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  green		0.0 1.0 0.0	0.0 1.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
@@ -42,6 +43,7 @@ sphere	0.0 0.0 0.5	0.5	white
 sphere	1.0 0.5 0.3	0.3	red
 sphere	1.5 0.0 0.3	0.3	green
 sphere	-1.0 0.5 0.3	0.3	blue
+sphere	0.0 1.0 1.0	0.3	complete_mirror
 
 #triangle A 			B 				C 		material_name
 triangle  -1.5 1.0 0.0 	-0.5 1.8 0.0 	-1.5 1.5 1.0	white

@@ -24,7 +24,7 @@ chmod +x tray #optional
 ./tray
 ```
 
-The tray program will read the file 'world.txt' and generate a **ppm** image file 'output.ppm', which can be opened by **xnview** or **photoshop** or another ppm supported image viewer.
+The tray program will read the file 'world.txt' and generate a **ppm** image file 'output.ppm', which can be opened by **xnview** or **photoshop** or any other ppm supported image viewer.
 
 # Result #
 
