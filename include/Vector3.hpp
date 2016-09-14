@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-template <typename T = double>
+template <typename T>
 class Vector3{
 public:
 	Vector3()
@@ -63,13 +63,13 @@ public:
 	T _x, _y, _z;
 };
 
-template <typename T = double>
+template <typename T>
 Vector3<T> operator*(T a, Vector3<T> v)
 {
 	return Vector3<T>(a * v._x, a * v._y, a * v._z);
 }
 
-template <typename T = double>
+template <typename T>
 Vector3<T> operator*(Vector3<T> v, T a)
 {
 	return Vector3<T>(a * v._x, a * v._y, a * v._z);
