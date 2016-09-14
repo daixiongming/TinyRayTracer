@@ -120,11 +120,10 @@ void Tracer::buildWorld()
 			_models.push_back(triangle);
 		}
 		else if (obj_name == "plane"){
-			worldfs >> v1 >> v2 >> v3;
+			worldfs >> v1 >> v2 >> v3 >> v4;
 			Vector3d n(v1, v2, v3);
-			worldfs >> v1 >> v2 >> v3;
-			Point3d p(v1, v2, v3);
-			Plane* plane = new Plane(n.norm(), p);
+			double d = v4;
+			Plane* plane = new Plane(n.norm(), v4);
 			worldfs >> material_name;
 			plane->setMaterial(*_materials[material_name]);
 			_models.push_back(plane);

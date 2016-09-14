@@ -48,8 +48,7 @@ sphere	0.0 1.0 1.0	0.3	complete_mirror
 #triangle A 			B 				C 		material_name
 triangle  -1.5 1.0 0.0 	-0.5 1.8 0.0 	-1.5 1.5 1.0	white
 
-#plane	normal		point on plane	material_name
-plane	0.0 0.0 1.0	0.0 0.0 0.0	mirror1
-plane	-0.5 -1.0 0.0	0.0 1.6 0.0	mirror2
-#plane	-1.0 -1.0 0.0	3.0 0.0 0.0	mirror
+#plane	normal		distance from O		material_name
+plane	0.0 0.0 1.0		0.0	mirror1
+plane	-0.5 -1.0 0.0	-1.5	mirror2
 

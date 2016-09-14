@@ -6,11 +6,11 @@
 
 class Plane : public Surface{
 	Vector3d _norm;
-	Point3d _point;
+	double _d;	// the distance from O to plane
 
 public:
 	Plane();
-	Plane(Vector3d norm, Point3d point);
+	Plane(Vector3d norm, double d);
 	virtual ~Plane();
 
 	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
