@@ -26,7 +26,9 @@ set(SOURCE_FILES src/main.cpp
 				src/Triangle.cpp
 				src/Polygon.cpp
 				src/Light.cpp	
-				src/Material.cpp			
+				src/Material.cpp	
+				src/Parser.cpp
+				src/World.cpp		
     )
 
 file(GLOB CURRENT_HEADERS  "include/*.h" "include/*.hpp")

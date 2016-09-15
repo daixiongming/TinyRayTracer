@@ -1,15 +1,14 @@
 #ifndef _TRACER_H_
 #define _TRACER_H_
 
-#include <vector>
-#include <map>
-#include <string>
 #include "Vector3.hpp"
 #include "Ray.hpp"
-#include "Surface.h"
 #include "HitRecord.hpp"
+#include "World.h"
 
 class Tracer{
+	friend class Parser;
+
 	int _pixel_nx, _pixel_ny;
 	double _viewport_left, _viewport_right, _viewport_top, _viewport_bottom;
 	Vector3d _camera_u, _camera_v, _camera_w;	// camera coordination
@@ -19,21 +18,21 @@ class Tracer{
 
 	Color _ambient_light;
 	Color _background;
-	std::vector<Light*> _lights;
-	std::vector<Surface*> _models;	// models
-	std::map<std::string, Material*> _materials;
 	
 	int _mirror_recursion_depth;
-
 	bool _depth_mode;
 
+	World* _world;
+
 public:
-	Tracer();
-	void buildWorld();
+	Tracer(World* world);
 	void trace();
+	void setWorld(World* world);
 	Color rayColor(Ray ray, int mirror_depth = 0);
 	Ray computeRay(int x, int y);
 	HitRecord hitSurface(Ray ray, double t0, double t1);
 };
+
+#include "Parser.h"
 
 #endif
