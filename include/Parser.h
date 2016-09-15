@@ -1,6 +1,7 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
+#include <string>
 #include "Tracer.h"
 #include "World.h"
 
@@ -9,7 +10,7 @@ class Parser{
 	Tracer* _tracer;
 public:
 	Parser(World* world, Tracer* tracer);
-	void readSource();
+	void readSource(const std::string& filename);
 };
 
 #endif

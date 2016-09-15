@@ -111,9 +111,9 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 	return color;
 }
 
-void Tracer::trace()
+void Tracer::trace(const std::string& output)
 {
-	ofstream img("output.ppm");
+	ofstream img(output);
 	img << (_depth_mode?"P2":"P3") << endl;
 	img << _pixel_nx << ' ' << _pixel_ny << endl;
 	img << (_depth_mode?"65535":"255") << endl;

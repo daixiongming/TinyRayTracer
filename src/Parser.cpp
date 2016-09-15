@@ -14,11 +14,11 @@ Parser::Parser(World* world, Tracer* tracer)
 
 }
 
-void Parser::readSource()
+void Parser::readSource(const string& filename)
 {
 	// reading world file
 	string obj_name;
-	ifstream worldfs("world.txt");
+	ifstream worldfs(filename);
 	double v1, v2, v3, v4;
 	string material_name;
 	while (worldfs >> obj_name && !worldfs.eof()){

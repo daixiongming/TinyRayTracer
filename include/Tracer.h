@@ -1,6 +1,7 @@
 #ifndef _TRACER_H_
 #define _TRACER_H_
 
+#include <string>
 #include "Vector3.hpp"
 #include "Ray.hpp"
 #include "HitRecord.hpp"
@@ -26,7 +27,7 @@ class Tracer{
 
 public:
 	Tracer(World* world);
-	void trace();
+	void trace(const std::string& output);
 	void setWorld(World* world);
 	Color rayColor(Ray ray, int mirror_depth = 0);
 	Ray computeRay(int x, int y);
