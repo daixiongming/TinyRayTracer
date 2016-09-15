@@ -25,6 +25,8 @@ class Tracer{
 	
 	int _mirror_recursion_depth;
 
+	bool _depth_mode;
+
 public:
 	Tracer();
 	void buildWorld();

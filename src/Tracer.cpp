@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <math.h>
 #include "Tracer.h"
 #include "Sphere.h"
 #include "Plane.h"
@@ -17,7 +18,8 @@ _perspective(true),
 _fd(0.2),
 _ambient_light(0.3, 0.3, 0.3),
 _background(0.0, 0.0, 0.0),
-_mirror_recursion_depth(1)
+_mirror_recursion_depth(1),
+_depth_mode(false)
 {
 
 }
@@ -64,6 +66,12 @@ void Tracer::buildWorld()
 		}
 		else if (obj_name == "resolution"){
 			worldfs >> _pixel_nx >> _pixel_ny;
+		}
+		else if (obj_name == "depth_mode"){
+			string sv;
+			worldfs >> sv;
+			if (sv == "true")
+				_depth_mode = true;
 		}
 		else if (obj_name == "background"){
 			worldfs >> v1 >> v2 >> v3;
@@ -161,35 +169,44 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 	Color color;
 	// shading
 	if (cam_hit._surface >= 0){
+		
+		if (_depth_mode){
 
-		vector<Light*> valid_lights = _lights;
-
-		// check for shadow
-		Point3d hit_point = cam_hit._hit_point;
-		for (int i = 0; i < _lights.size(); i++){
-			Ray light_ray;
-			light_ray.origin = hit_point;
-			light_ray.direction = -_lights[i]->_direction;
-			HitRecord light_hit = hitSurface(light_ray, 0.00001, INFINITY);
-			if (light_hit._surface >= 0)
-				valid_lights[i] = NULL;
+			// depth mode
+			double intensity = sqrt((cam_hit._t * ray.direction) * (cam_hit._t * ray.direction));
+			color = Color(intensity, intensity, intensity);
 		}
-
-		// color shading
-		color = _models[cam_hit._surface]->shading(_ambient_light, valid_lights, -ray.direction, cam_hit);
-		// get surface reflecting(mirror) color
-		Color k_m = _models[cam_hit._surface]->getMaterial().getMirror();
-		if (!k_m.isZero() && mirror_depth > 0){
-			// mirror ray
-			Vector3d norm = _models[cam_hit._surface]->getNorm(cam_hit._hit_point);
-			Ray mray;
-			mray.origin = cam_hit._hit_point;
-			mray.direction = ray.direction - 2 * (ray.direction * norm) * norm;
-
-			color += k_m.times(rayColor(mray, mirror_depth - 1));
-
-		}
+		else{
 			
+			// normal mode
+			vector<Light*> valid_lights = _lights;
+
+			// check for shadow
+			Point3d hit_point = cam_hit._hit_point;
+			for (int i = 0; i < _lights.size(); i++){
+				Ray light_ray;
+				light_ray.origin = hit_point;
+				light_ray.direction = -_lights[i]->_direction;
+				HitRecord light_hit = hitSurface(light_ray, 0.00001, INFINITY);
+				if (light_hit._surface >= 0)
+					valid_lights[i] = NULL;
+			}
+
+			// color shading
+			color = _models[cam_hit._surface]->shading(_ambient_light, valid_lights, -ray.direction, cam_hit);
+			// get surface reflecting(mirror) color
+			Color k_m = _models[cam_hit._surface]->getMaterial().getMirror();
+			if (!k_m.isZero() && mirror_depth > 0){
+				// mirror ray
+				Vector3d norm = _models[cam_hit._surface]->getNorm(cam_hit._hit_point);
+				Ray mray;
+				mray.origin = cam_hit._hit_point;
+				mray.direction = ray.direction - 2 * (ray.direction * norm) * norm;
+
+				color += k_m.times(rayColor(mray, mirror_depth - 1));
+
+			}
+		}
 	}
 	else{
 		// clear color (background)
@@ -201,29 +218,37 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 void Tracer::trace()
 {
 	ofstream img("output.ppm");
-	img << "P3" << endl;
+	img << (_depth_mode?"P2":"P3") << endl;
 	img << _pixel_nx << ' ' << _pixel_ny << endl;
-	img << "255" << endl;
+	img << (_depth_mode?"65535":"255") << endl;
 	// for each pixel
 	for (int y = _pixel_ny - 1; y >= 0; y--){
 		for (int x = 0; x < _pixel_nx; x++){
 			// compute camera ray
 			Ray cam_ray = computeRay(x, y);
 			Color color = rayColor(cam_ray, _mirror_recursion_depth);
-			int cx = (int)(color._x * 255);
-			int cy = (int)(color._y * 255);
-			int cz = (int)(color._z * 255);
-			if (cx > 255)
-				cx = 255;
-			if (cy > 255)
-				cy = 255;
-			if (cz > 255)
-				cz = 255;
 
-			img << cx << ' ' << cy << ' ' << cz << endl;
+			if (_depth_mode){
+				int depth = (int)(color._x * 1000);
+				if (depth > 65535)
+					depth = 65535;
+				img << depth << endl;
+			}
+			else{
+				int cx = (int)(color._x * 255);
+				int cy = (int)(color._y * 255);
+				int cz = (int)(color._z * 255);
+				if (cx > 255)
+					cx = 255;
+				if (cy > 255)
+					cy = 255;
+				if (cz > 255)
+					cz = 255;
 
+				img << cx << ' ' << cy << ' ' << cz << endl;
+			}
 		}
-		img << endl;
+		//img << endl;
 
 	}
 }

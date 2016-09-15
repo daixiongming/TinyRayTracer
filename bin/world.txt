@@ -3,16 +3,19 @@
 # all letter should be lower case
 
 #camera	axis of u	v		w (w is backward camera)	pos
-camera 	1.0 0.0 0.0	0.0 1.0 1.0	0.0 -1.0 1.0			0.5 -4.0 5.0
+camera 	1.0 0.0 0.0	0.0 1.0 1.0	0.0 -1.0 1.0			0.5 -3.0 4.0
 
 #viewport left	right	top	bottom	(based on camera u v coordination)
-viewport -0.15	0.15	0.1	-0.1
+viewport -0.2	0.2		0.15	-0.15
 
 #focal_distance	double
 focal_distance	0.5
 
 #resolution width	height	(w/h should consistent with viewport)
-resolution	900	600
+resolution	640	480
+
+#depth_mode		true/false
+depth_mode false
 
 #background	color(RGB)
 background	0.2 0.2 0.2
