@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <math.h>
+#include <algorithm>
 #include "Parser.h"
 #include "Tracer.h"
 /*
@@ -113,10 +115,13 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 
 void Tracer::trace(const std::string& output)
 {
-	ofstream img(output);
-	img << (_depth_mode?"P2":"P3") << endl;
-	img << _pixel_nx << ' ' << _pixel_ny << endl;
-	img << (_depth_mode?"65535":"255") << endl;
+	ofstream img(output,ios::binary);
+	ostringstream header;
+	header << (_depth_mode ? "P5" : "P6") << endl;
+	header << _pixel_nx << ' ' << _pixel_ny << endl;
+	header << (_depth_mode ? "65535" : "255") << endl;
+	string hear_str = header.str();
+	img.write(hear_str.c_str(), hear_str.size());
 	// for each pixel
 	for (int y = _pixel_ny - 1; y >= 0; y--){
 		for (int x = 0; x < _pixel_nx; x++){
@@ -125,26 +130,22 @@ void Tracer::trace(const std::string& output)
 			Color color = rayColor(cam_ray, _mirror_recursion_depth);
 
 			if (_depth_mode){
-				int depth = (int)(color._x * 1000);
-				if (depth > 65535)
-					depth = 65535;
-				img << depth << endl;
+				int depth = min((int)(color._x * 1000), 65535);
+				unsigned char d[2];
+				// NOTICE: big ending, unknow reason, it just works
+				d[0] = (unsigned char)((depth >> 8) & 0xff);
+				d[1] = (unsigned char)(depth & 0xff);
+				img.write((char*)d, sizeof(d));
 			}
 			else{
-				int cx = (int)(color._x * 255);
-				int cy = (int)(color._y * 255);
-				int cz = (int)(color._z * 255);
-				if (cx > 255)
-					cx = 255;
-				if (cy > 255)
-					cy = 255;
-				if (cz > 255)
-					cz = 255;
-
-				img << cx << ' ' << cy << ' ' << cz << endl;
+				unsigned char rgb[3];
+				rgb[0] = (unsigned char)min((int)(color._x * 255), 255);
+				rgb[1] = (unsigned char)min((int)(color._y * 255), 255);
+				rgb[2] = (unsigned char)min((int)(color._z * 255), 255);
+				
+				img.write((char*)rgb, sizeof(rgb));
 			}
 		}
-		//img << endl;
 
 	}
 }
