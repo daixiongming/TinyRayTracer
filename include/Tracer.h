@@ -22,6 +22,8 @@ class Tracer{
 	
 	int _mirror_recursion_depth;
 	bool _depth_mode;
+	double _min_visual;
+	double _max_visual;
 
 	World* _world;
 

@@ -54,6 +54,11 @@ void Parser::readSource(const string& filename)
 			worldfs >> v1;
 			_tracer->_fd = v1;
 		}
+		else if (obj_name == "view_distance"){
+			worldfs >> v1 >> v2;
+			_tracer->_min_visual = v1;
+			_tracer->_max_visual = v2;
+		}
 		else if (obj_name == "resolution"){
 			worldfs >> _tracer->_pixel_nx >> _tracer->_pixel_ny;
 		}

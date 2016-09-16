@@ -24,6 +24,8 @@ _ambient_light(0.3, 0.3, 0.3),
 _background(0.0, 0.0, 0.0),
 _mirror_recursion_depth(1),
 _depth_mode(false),
+_min_visual(0.1),
+_max_visual(50),
 _world(world)
 {
 
@@ -58,7 +60,8 @@ HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
 Color Tracer::rayColor(Ray ray, int mirror_depth)
 {
 	// hit test
-	HitRecord cam_hit = hitSurface(ray, 0.0001, INFINITY);
+	double min_vis = mirror_depth == _mirror_recursion_depth ? _min_visual : 0.00001;
+	HitRecord cam_hit = hitSurface(ray, min_vis, _max_visual);
 
 	Color color;
 	// shading
@@ -85,7 +88,7 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 				Ray light_ray;
 				light_ray.origin = hit_point;
 				light_ray.direction = -pLight->_direction;
-				HitRecord light_hit = hitSurface(light_ray, 0.00001, INFINITY);
+				HitRecord light_hit = hitSurface(light_ray, 0.00001, _max_visual);
 				if (light_hit._surface < 0)
 					valid_lights.push_back(pLight);
 			}

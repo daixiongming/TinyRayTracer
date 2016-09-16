@@ -11,6 +11,9 @@ viewport -0.2	0.2		0.15	-0.15
 #focal_distance	double
 focal_distance	0.5
 
+#view_distance 	min		max
+view_distance 	0.1		20
+
 #resolution width	height	(w/h should consistent with viewport)
 resolution	640	480
 
