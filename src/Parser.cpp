@@ -5,6 +5,7 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Plane.h"
+#include "Polygon.h"
 
 using namespace std;
 
@@ -124,6 +125,20 @@ void Parser::readSource(const string& filename)
 			worldfs >> material_name;
 			plane->setMaterial(*_world->_materials[material_name]);
 			_world->_models.push_back(plane);
+		}
+		else if (obj_name == "polygon"){
+			int vertex_num = 0;
+			worldfs >> vertex_num;
+			vector<Point3d> points;
+			for (int i = 0; i < vertex_num; i++){
+				worldfs >> v1 >> v2 >> v3;
+				points.push_back(Point3d(v1, v2, v3));
+			}
+			worldfs >> material_name;
+
+			Polygon* polygon = new Polygon(points);
+			polygon->setMaterial(*_world->_materials[material_name]);
+			_world->_models.push_back(polygon);
 		}
 	};
 }

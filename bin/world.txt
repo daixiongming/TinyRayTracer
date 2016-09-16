@@ -34,12 +34,14 @@ light	0.2 0.2 0.2 -1.0 1.0 -2.0
 #material name		ambient		diffuse		specular	mirror		phong_exponent
 material  diffuse	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.0 0.0 0.0	32.0
 material  mirror1	1.0 1.0 1.0	1.0 1.0 1.0	0.5 0.5 0.5	0.1 0.1 0.1	32.0
-material  mirror2	0.1 0.1 0.1	0.4 0.4 0.4	0.5 0.5 0.5	0.6 0.6 0.6	32.0
+material  mirror2	0.1 0.1 0.05	0.3 0.2 0.15	0.5 0.4 0.25	0.7 0.6 0.45	32.0
 material  complete_mirror	0.1 0.1 0.1		0.2 0.2 0.2	0.2 0.2 0.2	0.8 0.8 0.8 32.0
 material  white		1.0 1.0 1.0	1.0 1.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  red		1.0 0.0 0.0	1.0 0.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  green		0.0 1.0 0.0	0.0 1.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  blue		0.0 0.0 1.0	0.0 0.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
+material  dark		0.0 0.0 0.0  0.1 0.1 0.1  0.1 0.1 0.1  0.1 0.1 0.1  32.0
+
 
 #shere	center		radius	material_name
 sphere	0.0 0.0 0.5	0.5	white
@@ -55,3 +57,6 @@ triangle  -1.5 1.0 0.0 	-0.5 1.8 0.0 	-1.5 1.5 1.0	white
 plane	0.0 0.0 1.0		0.0	mirror1
 plane	-0.5 -1.0 0.0	-1.5	mirror2
 
+#polygon  vertex_num		points	material_name	
+polygon	4  -1.0 -1.0 0.1  1.0 -1.0 0.1  1.0 1.0 0.1  -1.0 1.0 0.1  dark 
+polygon	5  0.2 -0.8 0.2  0.5 -0.8 0.2  0.6 -0.5 0.2  0.35 -0.3 0.2  0.1 -0.5 0.2  complete_mirror
