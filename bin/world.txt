@@ -63,3 +63,4 @@ plane	-0.5 -1.0 0.0	-1.5	mirror2
 #polygon  vertex_num		points	material_name	
 polygon	4  -1.0 -1.0 0.1  1.0 -1.0 0.1  1.0 1.0 0.1  -1.0 1.0 0.1  dark 
 polygon	5  0.2 -0.8 0.2  0.5 -0.8 0.2  0.6 -0.5 0.2  0.35 -0.3 0.2  0.1 -0.5 0.2  complete_mirror
+

@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Exception.hpp"
 #include "Parser.h"
 #include "Tracer.h"
 #include "World.h"
@@ -21,15 +22,25 @@ int main(int argc, char *argv[])
 		std::cerr << "Usage: tray [world file] [output image name]" << std::endl;
 		return 1;
 	}
-	
-	cout << "Ready ..." << endl;
-	World world;
-	Tracer tracer(&world);
-	Parser parser(&world, &tracer);
-	cout << "Building world ..." << endl;
-	parser.readSource(source);
-	cout << "Ray tracing ..." << endl;
-	tracer.trace(output);
-	cout << "Done!" << endl;
+	try{
+		cout << "Ready ..." << endl;
+		World world;
+		Tracer tracer(&world);
+		Parser parser(&world, &tracer);
+		cout << "Building world ..." << endl;
+		parser.readSource(source);
+		cout << "Ray tracing ..." << endl;
+		tracer.trace(output);
+		cout << "Done!" << endl;
+	}
+	catch (Error e){
+		cerr << "An Error occurred:" << endl;
+		cerr << e.what() << endl;
+		system("pause");
+	}
+	catch (...){
+		cerr << "Unknow error" << endl;
+		system("pause");
+	}
 	return 0;
 }

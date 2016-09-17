@@ -6,6 +6,7 @@
 #include "Triangle.h"
 #include "Plane.h"
 #include "Polygon.h"
+#include "Exception.hpp"
 
 using namespace std;
 
@@ -18,11 +19,12 @@ Parser::Parser(World* world, Tracer* tracer)
 void Parser::readSource(const string& filename)
 {
 	// reading world file
-	string obj_name;
+	string obj_name, pre_objname;
 	ifstream worldfs(filename);
 	double v1, v2, v3, v4;
 	string material_name;
 	while (worldfs >> obj_name && !worldfs.eof()){
+		pre_objname = obj_name;
 		char trim;
 		if (obj_name[0] == '#'){
 			do{
@@ -146,4 +148,8 @@ void Parser::readSource(const string& filename)
 			_world->_models.push_back(polygon);
 		}
 	};
+	//when parser failed
+	if (!worldfs.eof()){
+		throw Error("Parser failed on " + pre_objname);
+	}
 }

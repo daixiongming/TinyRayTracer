@@ -28,7 +28,7 @@ _min_visual(0.1),
 _max_visual(50),
 _world(world)
 {
-
+	
 }
 
 
@@ -125,6 +125,7 @@ void Tracer::trace(const std::string& output)
 	header << (_depth_mode ? "65535" : "255") << endl;
 	string hear_str = header.str();
 	img.write(hear_str.c_str(), hear_str.size());
+	
 	// for each pixel
 	for (int y = _pixel_ny - 1; y >= 0; y--){
 		for (int x = 0; x < _pixel_nx; x++){

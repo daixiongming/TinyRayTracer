@@ -16,6 +16,9 @@ class World{
 	std::map<std::string, Material*> _materials;
 
 public:
+	World();
+	~World();
+	
 	Light* getLight(int index);
 	Surface* getSurface(int index);
 	Material* getMaterial(const std::string& name);

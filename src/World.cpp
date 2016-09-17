@@ -5,6 +5,40 @@
 
 using namespace std;
 
+World::World()
+{
+
+}
+
+World::~World()
+{
+	for (vector<Light*>::iterator it = _lights.begin();
+		it != _lights.end();
+		it++){
+		if (*it){
+			delete *it;
+			*it = NULL;
+		}
+	}
+	for (vector<Surface*>::iterator it = _models.begin();
+		it != _models.end();
+		it++){
+		if (*it){
+			delete *it;
+			*it = NULL;
+		}
+	}
+	for (map<std::string, Material*>::iterator it = _materials.begin();
+		it != _materials.end();
+		it++){
+		if (it->second){			
+			delete it->second;
+			it->second = NULL;
+		}
+	}
+
+}
+
 Light* World::getLight(int index)
 {
 	if (index < _lights.size())
