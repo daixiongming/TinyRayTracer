@@ -22,18 +22,18 @@ void Polygon::preProjection()
 
 	for (int i = 0; i < _points.size(); i++){
 		Vector3d& p = _points[i];
-		if (p._x > min_x)
+		if (p._x < min_x)
 			min_x = p._x;
-		if (p._y > min_y)
+		if (p._y < min_y)
 			min_y = p._y;
-		if (p._z > min_z)
+		if (p._z < min_z)
 			min_z = p._z;
 
-		if (p._x < max_x)
+		if (p._x > max_x)
 			max_x = p._x;
-		if (p._y < max_y)
+		if (p._y > max_y)
 			max_y = p._y;
-		if (p._z < max_z)
+		if (p._z > max_z)
 			max_z = p._z;
 	}
 
