@@ -44,7 +44,7 @@ Camera::Camera(Vector3f direction, float angle, Point3f position,
 	_v = _w.cross(_u).normal();
 
 	float ratio = float(_pixel_nx) / _pixel_ny;
-	float half_width = _fd * tan(2 * fov_angle * PI / 180);
+	float half_width = _fd * tan(0.5 * fov_angle * PI / 180);
 	_viewport_left = -half_width;
 	_viewport_right = half_width;
 	_viewport_top = half_width / ratio;

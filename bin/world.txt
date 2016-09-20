@@ -3,7 +3,7 @@
 # all letter should be lower case
 
 #camera	direction		angle	pos				focal fov	orthographic film_resolution	
-camera 	0.0 1.0 0.0		0.0		0.0 -3.0 1.7		0.1	  35	false		800	600		
+camera 	-1.0 2.0 -1.0		0.0		3.0 -4.0 3.0		0.1	  35	false		800	600		
 
 #viewport left	right	top	bottom	(based on camera u v coordination)
 viewport -0.2	0.2		0.15	-0.15
@@ -47,7 +47,7 @@ sphere	1.0 0.5 0.3	0.3	red
 sphere	1.5 0.0 0.3	0.3	green
 sphere	-1.0 0.5 0.3	0.3	blue
 sphere	0.0 1.0 1.0	0.3	complete_mirror
-sphere	-1.0 -1.0 1.0	1.0	red
+#sphere	-1.0 -1.0 1.0	1.0	red
 
 #triangle A 			B 				C 		material_name
 triangle  -1.5 1.0 0.0 	-0.5 1.8 0.0 	-1.5 1.5 1.0	white
