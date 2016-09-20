@@ -2,13 +2,13 @@
 #include "Vector3.hpp"
 
 Sphere::Sphere()
-:_c(0.0, 0.0, 0.0),
-_r(1.0)
+:_c(0.0f, 0.0f, 0.0f),
+_r(1.0f)
 {
 
 }
 
-Sphere::Sphere(Point3d c, double r)
+Sphere::Sphere(Point3f c, float r)
 :_c(c), _r(r)
 {
 
@@ -19,15 +19,15 @@ Sphere::~Sphere()
 
 }
 
-bool Sphere::hit(const Ray& ray, double t0, double t1, HitRecord& rec)
+bool Sphere::hit(const Ray& ray, float t0, float t1, HitRecord& rec)
 {
-	Vector3d d = ray.direction;
-	Point3d e = ray.origin;
-	Point3d c = _c;
-	double b = d * (e - c);
-	double discriminant = b * b - (d * d)*((e - c) * (e - c) - _r * _r);
+	Vector3f d = ray.direction;
+	Point3f e = ray.origin;
+	Point3f c = _c;
+	float b = d * (e - c);
+	float discriminant = b * b - (d * d)*((e - c) * (e - c) - _r * _r);
 	if (discriminant >= 0){
-		double t = (-b - sqrt(discriminant)) / (d * d);
+		float t = (-b - sqrt(discriminant)) / (d * d);
 		if (t >= t0 && t <= t1){
 			rec._t = t;
 			rec._hit_point = ray.origin + t * ray.direction;
@@ -37,7 +37,7 @@ bool Sphere::hit(const Ray& ray, double t0, double t1, HitRecord& rec)
 	return false;
 }
 
-Vector3d Sphere::getNorm(Point3d p)
+Vector3f Sphere::getNormal(Point3f p)
 {
-	return (p - _c).norm();
+	return (p - _c).normal();
 }

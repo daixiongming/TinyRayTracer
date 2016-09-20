@@ -5,16 +5,16 @@
 #include "Vector3.hpp"
 
 class Plane : public Surface{
-	Vector3d _norm;
-	double _d;	// the distance from O to plane
+	Vector3f _normal;
+	float _d;	// the distance from O to plane
 
 public:
 	Plane();
-	Plane(Vector3d norm, double d);
+	Plane(Vector3f normal, float d);
 	virtual ~Plane();
 
-	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
-	virtual Vector3d getNorm(Point3d p);
+	virtual bool hit(const Ray& ray, float t0, float t1, HitRecord& rec);
+	virtual Vector3f getNormal(Point3f p);
 };
 
 #endif

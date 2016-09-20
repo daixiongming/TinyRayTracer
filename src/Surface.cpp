@@ -28,11 +28,11 @@ Material Surface::getMaterial()
 }
 
 Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
-						Vector3d camera_direction, const HitRecord& rec)
+	Vector3f camera_direction, const HitRecord& rec)
 {
-	Vector3d norm = this->getNorm(rec._hit_point);
+	Vector3f normal = this->getNormal(rec._hit_point);
 
-	Color L = Color(0.0, 0.0, 0.0);
+	Color L = Color(0.0f, 0.0f, 0.0f);
 	
 	int light_num = (int)lights.size();
 	for (int i = 0; i < light_num; i++){
@@ -41,13 +41,13 @@ Color Surface::shading(Color ambient_light, std::vector<Light*> lights,
 			continue;
 
 		Color Ii = lights[i]->_color;
-		Vector3d ldi = -lights[i]->_direction;
+		Vector3f ldi = -lights[i]->_direction;
 		// diffuse reflection
-		L += _material._k_d.times(Ii) * std::max(0.0, norm * ldi);
+		L += _material._k_d.times(Ii) * std::max(0.0f, normal * ldi);
 
 		// specular reflection
-		Vector3d h = (ldi + camera_direction).norm();
-		L += _material._k_s.times(Ii) * pow(std::max(0.0, norm * h), _material._p);
+		Vector3f h = (ldi + camera_direction).normal();
+		L += _material._k_s.times(Ii) * pow(std::max(0.0f, normal * h), _material._p);
 	}
 	// ambient light
 	L += _material._k_a.times(ambient_light);

@@ -5,8 +5,8 @@
 
 class Ray{
 public:
-	Point3d origin;
-	Vector3d direction;
+	Point3f origin;
+	Vector3f direction;
 };
 
 #endif

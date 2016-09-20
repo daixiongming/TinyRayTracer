@@ -4,6 +4,7 @@
 #include <sstream>
 #include <math.h>
 #include <algorithm>
+#include <limits>
 #include "Parser.h"
 #include "Tracer.h"
 /*
@@ -15,16 +16,16 @@ using namespace std;
 
 Tracer::Tracer(World* world)
 :_pixel_nx(300), _pixel_ny(300),
-_viewport_left(-0.1), _viewport_right(0.1), _viewport_top(0.1), _viewport_bottom(-0.1),
-_camera_u(1.0, 0.0, 0.0), _camera_v(0.0, 0.0, 1.0), _camera_w(0.0, -1.0, 0.0),
-_camera_pos(0.0, 0.0, 1.0),
+_viewport_left(-0.1f), _viewport_right(0.1f), _viewport_top(0.1f), _viewport_bottom(-0.1f),
+_camera_u(1.0f, 0.0f, 0.0f), _camera_v(0.0f, 0.0f, 1.0f), _camera_w(0.0f, -1.0f, 0.0f),
+_camera_pos(0.0f, 0.0f, 1.0f),
 _perspective(true),
-_fd(0.2),
-_ambient_light(0.3, 0.3, 0.3),
-_background(0.0, 0.0, 0.0),
+_fd(0.2f),
+_ambient_light(0.3f, 0.3f, 0.3f),
+_background(0.0f, 0.0f, 0.0f),
 _mirror_recursion_depth(1),
 _depth_mode(false),
-_min_visual(0.1),
+_min_visual(0.1f),
 _max_visual(50),
 _world(world)
 {
@@ -38,11 +39,11 @@ void Tracer::setWorld(World* world)
 }
 
 
-HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
+HitRecord Tracer::hitSurface(Ray ray, float t0, float t1)
 {
 	HitRecord hitr;
 	hitr._surface = -1;
-	hitr._t = INFINITY;
+	hitr._t = numeric_limits<float>::infinity();
 	// check all models
 	Surface* pSurface;
 	for (int i = 0; pSurface = _world->getSurface(i); i++){
@@ -60,7 +61,7 @@ HitRecord Tracer::hitSurface(Ray ray, double t0, double t1)
 Color Tracer::rayColor(Ray ray, int mirror_depth)
 {
 	// hit test
-	double min_vis = mirror_depth == _mirror_recursion_depth ? _min_visual : 0.00001;
+	float min_vis = mirror_depth == _mirror_recursion_depth ? _min_visual : 0.00001f;
 	HitRecord cam_hit = hitSurface(ray, min_vis, _max_visual);
 
 	Color color;
@@ -73,7 +74,7 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 		if (_depth_mode){
 
 			// depth mode
-			double intensity = sqrt((cam_hit._t * ray.direction) * (cam_hit._t * ray.direction));
+			float intensity = sqrt((cam_hit._t * ray.direction) * (cam_hit._t * ray.direction));
 			color = Color(intensity, intensity, intensity);
 		}
 		else{
@@ -82,13 +83,13 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 			vector<Light*> valid_lights;
 
 			// check for shadow
-			Point3d hit_point = cam_hit._hit_point;
+			Point3f hit_point = cam_hit._hit_point;
 			Light* pLight;
 			for (int i = 0; pLight = _world->getLight(i); i++){
 				Ray light_ray;
 				light_ray.origin = hit_point;
 				light_ray.direction = -pLight->_direction;
-				HitRecord light_hit = hitSurface(light_ray, 0.00001, _max_visual);
+				HitRecord light_hit = hitSurface(light_ray, 0.00001f, _max_visual);
 				if (light_hit._surface < 0)
 					valid_lights.push_back(pLight);
 			}
@@ -99,10 +100,10 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 			Color k_m = pSurface->getMaterial().getMirror();
 			if (!k_m.isZero() && mirror_depth > 0){
 				// mirror ray
-				Vector3d norm = pSurface->getNorm(cam_hit._hit_point);
+				Vector3f normal = pSurface->getNormal(cam_hit._hit_point);
 				Ray mray;
 				mray.origin = cam_hit._hit_point;
-				mray.direction = ray.direction - 2 * (ray.direction * norm) * norm;
+				mray.direction = ray.direction - 2 * (ray.direction * normal) * normal;
 
 				color += k_m.times(rayColor(mray, mirror_depth - 1));
 
@@ -157,16 +158,16 @@ void Tracer::trace(const std::string& output)
 // TODO: change the function name
 Ray Tracer::computeRay(int x, int y)
 {
-	double u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5) / _pixel_nx;
-	double v = _viewport_bottom + (_viewport_top - _viewport_bottom)*(y + 0.5) / _pixel_ny;
+	float u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5f) / _pixel_nx;
+	float v = _viewport_bottom + (_viewport_top - _viewport_bottom)*(y + 0.5f) / _pixel_ny;
 	Ray ray;
 	if (_perspective){
 		ray.direction = -_fd * _camera_w + u * _camera_u + v * _camera_v;
-		ray.direction = ray.direction.norm();
+		ray.direction = ray.direction.normal();
 		ray.origin = _camera_pos;
 	}else{
 		ray.direction = -_camera_w;
-		ray.direction = ray.direction.norm();
+		ray.direction = ray.direction.normal();
 		ray.origin = _camera_pos + u * _camera_u + v * _camera_v;
 	}
 	return ray;

@@ -7,7 +7,7 @@ template <typename T>
 class Vector3{
 public:
 	Vector3()
-		:_x(0.0), _y(0.0), _z(0.0)
+		:_x(T()), _y(T()), _z(T())
 	{
 	}
 
@@ -18,7 +18,7 @@ public:
 
 	bool isZero()
 	{
-		return _x == 0.0 && _y == 0.0 && _z == 0.0;
+		return _x == T() && _y == T() && _z == T();
 	}
 
 	Vector3<T> operator-() const
@@ -49,7 +49,7 @@ public:
 		return *this;
 	}
 
-	Vector3<T> norm() const
+	Vector3<T> normal() const
 	{
 		T length = sqrt(_x * _x + _y * _y + _z * _z);
 		return Vector3(_x / length, _y / length, _z / length);
@@ -81,9 +81,11 @@ Vector3<T> operator*(Vector3<T> v, T a)
 	return Vector3<T>(a * v._x, a * v._y, a * v._z);
 }
 
-typedef Vector3<double> Point3d;
-typedef Vector3<double> Vector3d;
+//typedef Vector3<double> Point3d;
+//typedef Vector3<double> Vector3d;
 
-typedef Vector3<double> Color;
+typedef Vector3<float> Point3f;
+typedef Vector3<float> Vector3f;
+typedef Vector3<float> Color;
 
 #endif

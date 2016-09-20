@@ -5,14 +5,14 @@
 
 class Sphere : public Surface{
 public:
-	Point3d _c;
-	double _r;
+	Point3f _c;
+	float _r;
 public:
 	Sphere();
-	Sphere(Point3d c, double r);
+	Sphere(Point3f c, float r);
 	virtual ~Sphere();
-	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
-	virtual Vector3d getNorm(Point3d p);
+	virtual bool hit(const Ray& ray, float t0, float t1, HitRecord& rec);
+	virtual Vector3f getNormal(Point3f p);
 };
 
 #endif

@@ -1,12 +1,12 @@
 #include "Triangle.h"
 
 Triangle::Triangle()
-:_a(1.0, 0.0, 0.0), _b(0.0, 0.0, 0.0), _c(0.0, 1.0, 0.0)
+:_a(1.0f, 0.0f, 0.0f), _b(0.0f, 0.0f, 0.0f), _c(0.0f, 1.0f, 0.0f)
 {
 
 }
 
-Triangle::Triangle(Point3d a, Point3d b, Point3d c)
+Triangle::Triangle(Point3f a, Point3f b, Point3f c)
 : _a(a), _b(b), _c(c)
 {
 
@@ -17,33 +17,33 @@ Triangle::~Triangle()
 
 }
 
-bool Triangle::hit(const Ray& ray, double t0, double t1, HitRecord& rec)
+bool Triangle::hit(const Ray& ray, float t0, float t1, HitRecord& rec)
 {
-	double a = _a._x - _b._x;
-	double b = _a._y - _b._y;
-	double c = _a._z - _b._z;
-	double d = _a._x - _c._x;
-	double e = _a._y - _c._y;
-	double f = _a._z - _c._z;
-	double g = ray.direction._x;
-	double h = ray.direction._y;
-	double i = ray.direction._z;
-	double j = _a._x - ray.origin._x;
-	double k = _a._y - ray.origin._y;
-	double l = _a._z - ray.origin._z;
+	float a = _a._x - _b._x;
+	float b = _a._y - _b._y;
+	float c = _a._z - _b._z;
+	float d = _a._x - _c._x;
+	float e = _a._y - _c._y;
+	float f = _a._z - _c._z;
+	float g = ray.direction._x;
+	float h = ray.direction._y;
+	float i = ray.direction._z;
+	float j = _a._x - ray.origin._x;
+	float k = _a._y - ray.origin._y;
+	float l = _a._z - ray.origin._z;
 
-	double M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	float M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
 
-	double t = -(f*(a*k - j*b) + e*(j*c - a*l) + d*(b*l - k*c)) / M;
+	float t = -(f*(a*k - j*b) + e*(j*c - a*l) + d*(b*l - k*c)) / M;
 	if (t < t0 || t > t1)
 		return false;
 
-	double gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c)) / M;
-	if (gamma < 0 || gamma > 1)
+	float gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c)) / M;
+	if (gamma < 0.0f || gamma > 1.0f)
 		return false;
 
-	double beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g)) / M;
-	if (beta < 0 || beta > 1 - gamma)
+	float beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g)) / M;
+	if (beta < 0.0f || beta > 1 - gamma)
 		return false;
 
 	rec._t = t;
@@ -51,7 +51,7 @@ bool Triangle::hit(const Ray& ray, double t0, double t1, HitRecord& rec)
 	return true;
 }
 
-Vector3d Triangle::getNorm(Point3d p)
+Vector3f Triangle::getNormal(Point3f p)
 {
-	return ((_a - _c).cross(_b - _a)).norm();
+	return ((_a - _c).cross(_b - _a)).normal();
 }

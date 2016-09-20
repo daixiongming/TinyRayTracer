@@ -6,9 +6,9 @@
 class Light{
 public:
 	Light();
-	Light(Color color, Vector3d direction);
+	Light(Color color, Vector3f direction);
 	Color _color;
-	Vector3d _direction;
+	Vector3f _direction;
 };
 
 #endif

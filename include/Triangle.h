@@ -7,13 +7,13 @@
 #include "HitRecord.hpp"
 
 class Triangle : public Surface{
-	Point3d _a, _b, _c;
+	Point3f _a, _b, _c;
 public:
 	Triangle();
-	Triangle(Point3d a, Point3d b, Point3d c);
+	Triangle(Point3f a, Point3f b, Point3f c);
 	virtual ~Triangle();
-	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
-	virtual Vector3d getNorm(Point3d p);
+	virtual bool hit(const Ray& ray, float t0, float t1, HitRecord& rec);
+	virtual Vector3f getNormal(Point3f p);
 };
 
 #endif

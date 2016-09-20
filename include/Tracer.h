@@ -11,19 +11,19 @@ class Tracer{
 	friend class Parser;
 
 	int _pixel_nx, _pixel_ny;
-	double _viewport_left, _viewport_right, _viewport_top, _viewport_bottom;
-	Vector3d _camera_u, _camera_v, _camera_w;	// camera coordination
-	Point3d _camera_pos;	// camera position
+	float _viewport_left, _viewport_right, _viewport_top, _viewport_bottom;
+	Vector3f _camera_u, _camera_v, _camera_w;	// camera coordination
+	Point3f _camera_pos;	// camera position
 	bool _perspective;
-	double _fd;		// focal distance
+	float _fd;		// focal distance
 
 	Color _ambient_light;
 	Color _background;
 	
 	int _mirror_recursion_depth;
 	bool _depth_mode;
-	double _min_visual;
-	double _max_visual;
+	float _min_visual;
+	float _max_visual;
 
 	World* _world;
 
@@ -33,7 +33,7 @@ public:
 	void setWorld(World* world);
 	Color rayColor(Ray ray, int mirror_depth = 0);
 	Ray computeRay(int x, int y);
-	HitRecord hitSurface(Ray ray, double t0, double t1);
+	HitRecord hitSurface(Ray ray, float t0, float t1);
 };
 
 #include "Parser.h"

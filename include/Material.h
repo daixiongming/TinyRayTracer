@@ -9,11 +9,11 @@ class Material{
 	Color _k_d;	// diffuse coefficient
 	Color _k_s;	// specular coefficient
 	Color _k_m; // mirror coefficient
-	double _p;		// phong exponent
+	float _p;		// phong exponent
 
 public:
 	Material();
-	Material(Color ambient, Color diffuse, Color specular, Color mirror, double phong_exp);
+	Material(Color ambient, Color diffuse, Color specular, Color mirror, float phong_exp);
 	Color getMirror();
 };
 

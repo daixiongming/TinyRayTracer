@@ -6,7 +6,7 @@
 #include "Vector3.hpp"
 
 class Polygon : public Surface{
-	std::vector<Vector3d> _points;
+	std::vector<Vector3f> _points;
 
 	int _index_u, _index_v;
 
@@ -14,10 +14,10 @@ class Polygon : public Surface{
 
 public:
 	//Polygon();
-	Polygon(const std::vector<Point3d>& points);
+	Polygon(const std::vector<Point3f>& points);
 	virtual ~Polygon();
-	virtual bool hit(const Ray& ray, double t0, double t1, HitRecord& rec);
-	virtual Vector3d getNorm(Point3d p);
+	virtual bool hit(const Ray& ray, float t0, float t1, HitRecord& rec);
+	virtual Vector3f getNormal(Point3f p);
 };
 
 #endif
