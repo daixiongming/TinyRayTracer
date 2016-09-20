@@ -25,7 +25,10 @@ public:
 	{
 		return Vector3(-_x, -_y, -_z);
 	}
-
+	T& operator[](size_t i)
+	{
+		return (&_x)[i];
+	}
 	Vector3<T> operator+(const Vector3<T>& a) const
 	{
 		return Vector3(_x + a._x, _y + a._y, _z + a._z);
@@ -51,8 +54,8 @@ public:
 
 	Vector3<T> normal() const
 	{
-		T length = sqrt(_x * _x + _y * _y + _z * _z);
-		return Vector3(_x / length, _y / length, _z / length);
+		T inv_length = 1 / sqrt(_x * _x + _y * _y + _z * _z);
+		return Vector3(_x * inv_length, _y * inv_length, _z * inv_length);
 	}
 
 	Vector3<T> times(const Vector3<T>& a) const

@@ -17,8 +17,6 @@ using namespace std;
 Tracer::Tracer(World* world)
 :_pixel_nx(300), _pixel_ny(300),
 _viewport_left(-0.1f), _viewport_right(0.1f), _viewport_top(0.1f), _viewport_bottom(-0.1f),
-_camera_u(1.0f, 0.0f, 0.0f), _camera_v(0.0f, 0.0f, 1.0f), _camera_w(0.0f, -1.0f, 0.0f),
-_camera_pos(0.0f, 0.0f, 1.0f),
 _perspective(true),
 _fd(0.2f),
 _ambient_light(0.3f, 0.3f, 0.3f),
@@ -160,15 +158,18 @@ Ray Tracer::computeRay(int x, int y)
 {
 	float u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5f) / _pixel_nx;
 	float v = _viewport_bottom + (_viewport_top - _viewport_bottom)*(y + 0.5f) / _pixel_ny;
+	Vector3f cam_u, cam_v, cam_w;
+	_world->getCamera()->getFrame(cam_u, cam_v, cam_w);
+	Vector3f cam_pos = _world->getCamera()->getPosition();
 	Ray ray;
 	if (_perspective){
-		ray.direction = -_fd * _camera_w + u * _camera_u + v * _camera_v;
+		ray.direction = -_fd * cam_w + u * cam_u + v * cam_v;
 		ray.direction = ray.direction.normal();
-		ray.origin = _camera_pos;
+		ray.origin = cam_pos;
 	}else{
-		ray.direction = -_camera_w;
+		ray.direction = -cam_w;
 		ray.direction = ray.direction.normal();
-		ray.origin = _camera_pos + u * _camera_u + v * _camera_v;
+		ray.origin = cam_pos + u * cam_u + v * cam_v;
 	}
 	return ray;
 }

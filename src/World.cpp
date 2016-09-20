@@ -63,3 +63,8 @@ Material* World::getMaterial(const string& name)
 
 	return NULL;
 }
+
+Camera* World::getCamera()
+{
+	return &_camera;
+}

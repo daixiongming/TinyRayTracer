@@ -12,8 +12,6 @@ class Tracer{
 
 	int _pixel_nx, _pixel_ny;
 	float _viewport_left, _viewport_right, _viewport_top, _viewport_bottom;
-	Vector3f _camera_u, _camera_v, _camera_w;	// camera coordination
-	Point3f _camera_pos;	// camera position
 	bool _perspective;
 	float _fd;		// focal distance
 

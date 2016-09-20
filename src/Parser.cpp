@@ -7,6 +7,7 @@
 #include "Plane.h"
 #include "Polygon.h"
 #include "Exception.hpp"
+#include "Camera.h"
 
 using namespace std;
 
@@ -40,10 +41,9 @@ void Parser::readSource(const string& filename)
 			Vector3f w(v1, v2, v3);
 			worldfs >> v1 >> v2 >> v3;
 			Vector3f pos(v1, v2, v3);
-			_tracer->_camera_u = u.normal();
-			_tracer->_camera_v = v.normal();
-			_tracer->_camera_w = w.normal();
-			_tracer->_camera_pos = pos;
+
+			Camera cam(u.normal(), v.normal(), w.normal(), pos);
+			_world->_camera = cam;
 		}
 		else if (obj_name == "viewport"){
 			worldfs >> v1 >> v2 >> v3 >> v4;
