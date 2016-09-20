@@ -49,8 +49,8 @@ HitRecord Tracer::hitSurface(Ray ray, float t0, float t1)
 
 Color Tracer::rayColor(Ray ray, int mirror_depth)
 {
-	// hit test
-	float min_vis = mirror_depth == _mirror_recursion_depth ? _min_visual : 0.00001f;
+	// hit test, for the first time camera hit, _use min_visial
+	float min_vis = (mirror_depth == _mirror_recursion_depth ? _min_visual : 0.00001f);
 	HitRecord cam_hit = hitSurface(ray, min_vis, _max_visual);
 
 	Color color;
@@ -78,7 +78,8 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 				Ray light_ray;
 				light_ray.origin = hit_point;
 				light_ray.direction = -pLight->_direction;
-				HitRecord light_hit = hitSurface(light_ray, 0.00001f, _max_visual);
+				// 0.001f * cam_hit._t  adaptive adjust
+				HitRecord light_hit = hitSurface(light_ray, 0.0001f * cam_hit._t, _max_visual);
 				if (light_hit._surface < 0)
 					valid_lights.push_back(pLight);
 			}
@@ -93,7 +94,8 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 				Ray mray;
 				mray.origin = cam_hit._hit_point;
 				mray.direction = ray.direction - 2 * (ray.direction * normal) * normal;
-
+				// prevent ray cross himself
+				mray.origin += 0.0001f * cam_hit._t * mray.direction;
 				color += k_m.times(rayColor(mray, mirror_depth - 1));
 
 			}

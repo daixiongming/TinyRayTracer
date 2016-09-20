@@ -3,13 +3,13 @@
 # all letter should be lower case
 
 #camera	direction		angle	pos				focal fov	orthographic film_resolution	
-camera 	0.0 2.0 -1.0	0.0		0.5 -2.0 1.5	0.1	  20	false				640	480			
+camera 	0.0 1.0 0.0		0.0		0.0 -3.0 1.7		0.1	  35	false		800	600		
 
 #viewport left	right	top	bottom	(based on camera u v coordination)
 viewport -0.2	0.2		0.15	-0.15
 
 #view_distance 	min		max
-view_distance 	0.1		20
+view_distance 	0.1		10000
 
 #depth_mode		true/false
 depth_mode false
@@ -38,6 +38,7 @@ material  red		1.0 0.0 0.0	1.0 0.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  green		0.0 1.0 0.0	0.0 1.0 0.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  blue		0.0 0.0 1.0	0.0 0.0 1.0	1.0 1.0 1.0	0.1 0.1 0.1	32.0
 material  dark		0.0 0.0 0.0  0.1 0.1 0.1  0.1 0.1 0.1  0.1 0.1 0.1  32.0
+material  test		0.1 0.1 0.05	0.3 0.2 0.15	0.5 0.4 0.25	0.0 0.0 0.0	32.0
 
 
 #shere	center		radius	material_name
@@ -46,6 +47,7 @@ sphere	1.0 0.5 0.3	0.3	red
 sphere	1.5 0.0 0.3	0.3	green
 sphere	-1.0 0.5 0.3	0.3	blue
 sphere	0.0 1.0 1.0	0.3	complete_mirror
+sphere	-1.0 -1.0 1.0	1.0	red
 
 #triangle A 			B 				C 		material_name
 triangle  -1.5 1.0 0.0 	-0.5 1.8 0.0 	-1.5 1.5 1.0	white
