@@ -1,9 +1,4 @@
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <math.h>
-#include <algorithm>
 #include <limits>
 #include "Parser.h"
 #include "Tracer.h"
@@ -15,11 +10,7 @@
 using namespace std;
 
 Tracer::Tracer(World* world)
-:_pixel_nx(300), _pixel_ny(300),
-_viewport_left(-0.1f), _viewport_right(0.1f), _viewport_top(0.1f), _viewport_bottom(-0.1f),
-_perspective(true),
-_fd(0.2f),
-_ambient_light(0.3f, 0.3f, 0.3f),
+:_ambient_light(0.3f, 0.3f, 0.3f),
 _background(0.0f, 0.0f, 0.0f),
 _mirror_recursion_depth(1),
 _depth_mode(false),
@@ -115,61 +106,14 @@ Color Tracer::rayColor(Ray ray, int mirror_depth)
 	return color;
 }
 
-void Tracer::trace(const std::string& output)
+void Tracer::trace()
 {
-	ofstream img(output,ios::binary);
-	ostringstream header;
-	header << (_depth_mode ? "P5" : "P6") << endl;
-	header << _pixel_nx << ' ' << _pixel_ny << endl;
-	header << (_depth_mode ? "65535" : "255") << endl;
-	string hear_str = header.str();
-	img.write(hear_str.c_str(), hear_str.size());
-	
-	// for each pixel
-	for (int y = _pixel_ny - 1; y >= 0; y--){
-		for (int x = 0; x < _pixel_nx; x++){
-			// compute camera ray
-			Ray cam_ray = computeRay(x, y);
+	// for each camera ray
+	Ray cam_ray;
+	Camera* camera = _world->getCamera();
+	for (int i = 0; camera->getRay(i, cam_ray); i++){
+
 			Color color = rayColor(cam_ray, _mirror_recursion_depth);
-
-			if (_depth_mode){
-				int depth = min((int)(color._x * 1000), 65535);
-				unsigned char d[2];
-				// NOTICE: big ending, unknow reason, it just works
-				d[0] = (unsigned char)((depth >> 8) & 0xff);
-				d[1] = (unsigned char)(depth & 0xff);
-				img.write((char*)d, sizeof(d));
-			}
-			else{
-				unsigned char rgb[3];
-				rgb[0] = (unsigned char)min((int)(color._x * 255), 255);
-				rgb[1] = (unsigned char)min((int)(color._y * 255), 255);
-				rgb[2] = (unsigned char)min((int)(color._z * 255), 255);
-				
-				img.write((char*)rgb, sizeof(rgb));
-			}
-		}
-
+			camera->setPixel(i, color);
 	}
-}
-
-// TODO: change the function name
-Ray Tracer::computeRay(int x, int y)
-{
-	float u = _viewport_left + (_viewport_right - _viewport_left)*(x + 0.5f) / _pixel_nx;
-	float v = _viewport_bottom + (_viewport_top - _viewport_bottom)*(y + 0.5f) / _pixel_ny;
-	Vector3f cam_u, cam_v, cam_w;
-	_world->getCamera()->getFrame(cam_u, cam_v, cam_w);
-	Vector3f cam_pos = _world->getCamera()->getPosition();
-	Ray ray;
-	if (_perspective){
-		ray.direction = -_fd * cam_w + u * cam_u + v * cam_v;
-		ray.direction = ray.direction.normal();
-		ray.origin = cam_pos;
-	}else{
-		ray.direction = -cam_w;
-		ray.direction = ray.direction.normal();
-		ray.origin = cam_pos + u * cam_u + v * cam_v;
-	}
-	return ray;
 }

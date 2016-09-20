@@ -16,7 +16,7 @@ class World{
 	std::vector<Surface*> _models;	// models
 	std::map<std::string, Material*> _materials;
 
-	Camera _camera;
+	Camera* _camera;
 
 public:
 	World();

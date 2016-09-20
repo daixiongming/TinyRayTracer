@@ -10,10 +10,6 @@
 class Tracer{
 	friend class Parser;
 
-	int _pixel_nx, _pixel_ny;
-	float _viewport_left, _viewport_right, _viewport_top, _viewport_bottom;
-	bool _perspective;
-	float _fd;		// focal distance
 
 	Color _ambient_light;
 	Color _background;
@@ -27,10 +23,9 @@ class Tracer{
 
 public:
 	Tracer(World* world);
-	void trace(const std::string& output);
+	void trace();
 	void setWorld(World* world);
 	Color rayColor(Ray ray, int mirror_depth = 0);
-	Ray computeRay(int x, int y);
 	HitRecord hitSurface(Ray ray, float t0, float t1);
 };
 

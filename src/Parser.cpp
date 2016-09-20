@@ -34,35 +34,28 @@ void Parser::readSource(const string& filename)
 		}
 		else if (obj_name == "camera"){
 			worldfs >> v1 >> v2 >> v3;
-			Vector3f u(v1, v2, v3);
-			worldfs >> v1 >> v2 >> v3;
-			Vector3f v(v1, v2, v3);
-			worldfs >> v1 >> v2 >> v3;
-			Vector3f w(v1, v2, v3);
+			Vector3f direction(v1, v2, v3);
+			float angle;
+			worldfs >> angle;
 			worldfs >> v1 >> v2 >> v3;
 			Vector3f pos(v1, v2, v3);
-
-			Camera cam(u.normal(), v.normal(), w.normal(), pos);
-			_world->_camera = cam;
-		}
-		else if (obj_name == "viewport"){
-			worldfs >> v1 >> v2 >> v3 >> v4;
-			_tracer->_viewport_left = v1;
-			_tracer->_viewport_right = v2;
-			_tracer->_viewport_top = v3;
-			_tracer->_viewport_bottom = v4;
-		}
-		else if (obj_name == "focal_distance"){
-			worldfs >> v1;
-			_tracer->_fd = v1;
+			// focal fov
+			worldfs >> v1 >> v2;
+			string ortho;
+			bool isortho = false;
+			worldfs >> ortho;
+			if (ortho == "true")
+				isortho = true;
+			// resolution
+			int imw, imh;
+			worldfs >> imw >> imh;
+			_world->_camera = new Camera(direction, angle, pos, v1, v2, isortho, imw, imh);
+			
 		}
 		else if (obj_name == "view_distance"){
 			worldfs >> v1 >> v2;
 			_tracer->_min_visual = v1;
 			_tracer->_max_visual = v2;
-		}
-		else if (obj_name == "resolution"){
-			worldfs >> _tracer->_pixel_nx >> _tracer->_pixel_ny;
 		}
 		else if (obj_name == "depth_mode"){
 			string sv;

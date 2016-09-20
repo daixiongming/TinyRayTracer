@@ -2,20 +2,14 @@
 # '#' is the comment
 # all letter should be lower case
 
-#camera	axis of u	v		w (w is backward camera)	pos
-camera 	1.0 0.0 0.0	0.0 1.0 1.0	0.0 -1.0 1.0			0.5 -3.0 4.0
+#camera	direction		angle	pos				focal fov	orthographic film_resolution	
+camera 	0.0 2.0 -1.0	0.0		0.5 -2.0 1.5	0.1	  20	false				640	480			
 
 #viewport left	right	top	bottom	(based on camera u v coordination)
 viewport -0.2	0.2		0.15	-0.15
 
-#focal_distance	double
-focal_distance	0.5
-
 #view_distance 	min		max
 view_distance 	0.1		20
-
-#resolution width	height	(w/h should consistent with viewport)
-resolution	640	480
 
 #depth_mode		true/false
 depth_mode false

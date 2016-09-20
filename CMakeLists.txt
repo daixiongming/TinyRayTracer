@@ -29,7 +29,8 @@ set(SOURCE_FILES src/main.cpp
 				src/Material.cpp	
 				src/Parser.cpp
 				src/World.cpp	
-				src/Camera.cpp	
+				src/Camera.cpp
+				src/Output.cpp	
     )
 
 file(GLOB CURRENT_HEADERS  "include/*.h" "include/*.hpp")
